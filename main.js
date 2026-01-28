@@ -141,7 +141,7 @@ document.getElementById('payslip-form').addEventListener('submit', function(e) {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const themeSwitcher = document.getElementById('theme-switcher');
+    const themeSwitcher = document.getElementById('toggle-theme');
     const currentTheme = localStorage.getItem('theme');
 
     if (currentTheme === 'dark') {

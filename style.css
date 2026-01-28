@@ -35,13 +35,13 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-.theme-switcher-container {
+.toggle-theme-container {
     position: fixed;
     top: 20px;
     right: 20px;
 }
 
-#theme-switcher {
+#toggle-theme {
     padding: 10px 20px;
     background-color: var(--container-bg);
     color: var(--text-color);
@@ -51,7 +51,7 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-#theme-switcher:hover {
+#toggle-theme:hover {
     background-color: var(--bg-color);
 }
 
