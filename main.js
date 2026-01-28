@@ -114,8 +114,6 @@ document.getElementById('payslip-form').addEventListener('submit', function(e) {
     const nationalPension = parseFloat(document.getElementById('national-pension').value);
     const employmentInsurance = parseFloat(document.getElementById('employment-insurance').value);
 
-    // Assuming total earnings is primarily calculated from daily wage * working days.
-    // The hourly wage is listed but not used in the total earnings calculation in this version.
     const totalEarnings = dailyWage * workingDays;
     const totalDeductions = earnedIncomeTax + residentTax + healthInsurance + nationalPension + employmentInsurance;
     const netPay = totalEarnings - totalDeductions;
@@ -140,4 +138,22 @@ document.getElementById('payslip-form').addEventListener('submit', function(e) {
     });
 
     payslipContainer.appendChild(payslip);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const themeSwitcher = document.getElementById('theme-switcher');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    themeSwitcher.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        let theme = 'light';
+        if (document.body.classList.contains('dark-mode')) {
+            theme = 'dark';
+        }
+        localStorage.setItem('theme', theme);
+    });
 });
