@@ -1,14 +1,71 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payslip Generator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+    <div class="container">
+        <h1>Payslip Generator</h1>
+        <form id="payslip-form">
+            <div class="form-grid">
+                <div class="form-column">
+                    <h2>Employee Details</h2>
+                    <div class="form-group">
+                        <label for="employee-name">Employee Name</label>
+                        <input type="text" id="employee-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employee-id">Employee ID</label>
+                        <input type="text" id="employee-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="working-days">Working Days</label>
+                        <input type="number" id="working-days" required>
+                    </div>
+                </div>
+                <div class="form-column">
+                    <h2>Earnings</h2>
+                    <div class="form-group">
+                        <label for="daily-wage">Daily Wage</label>
+                        <input type="number" id="daily-wage" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="hourly-wage">Regular Hourly Wage</label>
+                        <input type="number" id="hourly-wage" value="0">
+                    </div>
+                </div>
+                <div class="form-column">
+                    <h2>Deductions</h2>
+                    <div class="form-group">
+                        <label for="earned-income-tax">Earned Income Tax</label>
+                        <input type="number" id="earned-income-tax" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="resident-tax">Resident Tax</label>
+                        <input type="number" id="resident-tax" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="health-insurance">Health Insurance</label>
+                        <input type="number" id="health-insurance" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="national-pension">National Pension</label>
+                        <input type="number" id="national-pension" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="employment-insurance">Employment Insurance</label>
+                        <input type="number" id="employment-insurance" value="0">
+                    </div>
+                </div>
+            </div>
+            <button type="submit">Generate Payslip</button>
+        </form>
+        <div id="payslip-container"></div>
+    </div>
+    <script src="main.js"></script>
 </body>
 </html>
