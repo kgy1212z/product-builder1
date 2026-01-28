@@ -1,112 +1,22 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payslip Generator</title>
+    <title>가위바위보</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Payslip Generator</h1>
-        <div class="toggle-theme-container">
-            <button id="toggle-theme">Toggle Theme</button>
-        </div>
-        <form id="payslip-form">
-            <div class="form-grid">
-                <div class="form-column">
-                    <h2>Employee Details</h2>
-                    <div class="form-group">
-                        <label for="employee-name">Employee Name</label>
-                        <input type="text" id="employee-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="employee-id">Employee ID</label>
-                        <input type="text" id="employee-id" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="working-days">Working Days</label>
-                        <input type="number" id="working-days" required>
-                    </div>
-                </div>
-                <div class="form-column">
-                    <h2>Earnings</h2>
-                    <div class="form-group">
-                        <label for="daily-wage">Daily Wage</label>
-                        <input type="number" id="daily-wage" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="hourly-wage">Regular Hourly Wage</label>
-                        <input type="number" id="hourly-wage" value="0">
-                    </div>
-                </div>
-                <div class="form-column">
-                    <h2>Deductions</h2>
-                    <div class="form-group">
-                        <label for="earned-income-tax">Earned Income Tax</label>
-                        <input type="number" id="earned-income-tax" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="resident-tax">Resident Tax</label>
-                        <input type="number" id="resident-tax" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="health-insurance">Health Insurance</label>
-                        <input type="number" id="health-insurance" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="national-pension">National Pension</label>
-                        <input type="number" id="national-pension" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="employment-insurance">Employment Insurance</label>
-                        <input type="number" id="employment-insurance" value="0">
-                    </div>
-                </div>
-            </div>
-            <button type="submit">Generate Payslip</button>
-        </form>
-        <div id="payslip-container"></div>
-
-        <div class="container partnership-inquiry-container">
-            <h2>Partnership Inquiry</h2>
-            <form action="https://formspree.io/f/mnjdkpoz" method="POST" class="partnership-inquiry-form">
-                <div class="form-group">
-                    <label for="name">Your Name:</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Your Email:</label>
-                    <input type="email" id="email" name="_replyto" required>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message:</label>
-                    <textarea id="message" name="message" rows="6" required></textarea>
-                </div>
-                <button type="submit">Send Inquiry</button>
-            </form>
-        </div>
-    </div>
+    <h1>가위바위보</h1>
+    <div>Teachable Machine Image Model</div>
+    <button type="button" onclick="init()">Start</button>
+    <div id="webcam-container"></div>
+    <div id="label-container"></div>
+    <div id="computer-choice"></div>
+    <div id="result"></div>
+    <div id="score"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
     <script src="main.js"></script>
-    <div id="disqus_thread"></div>
-    <script>
-        /**
-        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
-
-        var disqus_config = function () {
-        this.page.url = window.location.href;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'ddalkkak-1-page'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-        };
-
-        (function() { // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
-        s.src = 'https://product-builder1.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </body>
 </html>
