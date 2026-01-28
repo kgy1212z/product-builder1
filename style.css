@@ -170,3 +170,73 @@ payslip-component {
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     transition: background-color 0.3s, border-color 0.3s;
 }
+
+/* Partnership Inquiry Form Styles */
+.partnership-inquiry-container {
+    margin-top: 40px;
+    padding: 30px;
+    background: var(--container-bg);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.partnership-inquiry-container h2 {
+    text-align: center;
+    color: var(--h1-color); /* Using h1-color for prominent titles */
+    margin-bottom: 25px;
+    font-size: 2rem;
+    transition: color 0.3s;
+}
+
+.partnership-inquiry-form .form-group {
+    margin-bottom: 20px;
+}
+
+.partnership-inquiry-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--label-color);
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.partnership-inquiry-form input[type="text"],
+.partnership-inquiry-form input[type="email"],
+.partnership-inquiry-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    box-sizing: border-box;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.partnership-inquiry-form input[type="text"]:focus,
+.partnership-inquiry-form input[type="email"]:focus,
+.partnership-inquiry-form textarea:focus {
+    outline: none;
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+}
+
+.partnership-inquiry-form button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #2ecc71; /* A nice green for inquiry button */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
+}
+
+.partnership-inquiry-form button[type="submit"]:hover {
+    background-color: #27ae60;
+    box-shadow: 0 6px 8px rgba(46, 204, 113, 0.3);
+}
