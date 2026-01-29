@@ -1,96 +1,125 @@
 :root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
     --bg-color: #f4f7f6;
     --text-color: #333;
     --container-bg: #fff;
     --input-border: #ccc;
-    --input-focus-border: #3498db;
     --h1-color: #2c3e50;
     --h2-color: #34495e;
     --label-color: #555;
-    --payslip-bg: #f9f9f9;
-    --payslip-border: #ddd;
+    --white-color: #fff;
+    --light-gray-color: #ecf0f1;
     --noise-opacity: 0.05;
 }
 
-.dark-mode {
-    --bg-color: #2c3e50;
-    --text-color: #ecf0f1;
-    --container-bg: #34495e;
-    --input-border: #7f8c8d;
-    --input-focus-border: #5dade2;
-    --h1-color: #ecf0f1;
-    --h2-color: #bdc3c7;
-    --label-color: #bdc3c7;
-    --payslip-bg: #2c3e50;
-    --payslip-border: #7f8c8d;
-    --noise-opacity: 0.1;
-}
-
 body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
-    padding: 20px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.toggle-theme-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-}
-
-#toggle-theme {
-    padding: 10px 20px;
-    background-color: var(--container-bg);
-    color: var(--text-color);
-    border: 1px solid var(--input-border);
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-#toggle-theme:hover {
-    background-color: var(--bg-color);
+    padding: 0;
+    line-height: 1.6;
 }
 
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    background: var(--container-bg);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 1;
-    transition: background-color 0.3s;
+    padding: 20px;
 }
 
-.container::before {
-    content: "";
-    position: absolute;
+/* Header and Navigation */
+header {
+    background-color: var(--white-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
-    opacity: var(--noise-opacity);
-    pointer-events: none;
-    z-index: -1;
-    transition: opacity 0.3s;
+    z-index: 1000;
 }
 
-h1 {
-    text-align: center;
-    color: var(--h1-color);
-    margin-bottom: 30px;
-    font-size: 2.5rem;
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+nav .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav li a {
+    display: block;
+    color: var(--secondary-color);
+    padding: 0 1rem;
+    text-decoration: none;
+    font-weight: bold;
     transition: color 0.3s;
 }
 
-#payslip-form {
-    margin-bottom: 30px;
+nav li a:hover {
+    color: var(--primary-color);
+}
+
+/* Main sections */
+main {
+    padding-top: 2rem;
+}
+
+section {
+    padding: 4rem 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+section:last-of-type {
+    border-bottom: none;
+}
+
+section h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--h2-color);
+    margin-bottom: 2rem;
+}
+
+section p {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    color: var(--label-color);
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 6rem 0;
+    background-color: var(--light-gray-color);
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    color: var(--h1-color);
+    margin-bottom: 1rem;
+}
+
+/* Form Styles */
+#payslip-form, .partnership-inquiry-form {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: var(--white-color);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .form-grid {
@@ -99,13 +128,12 @@ h1 {
     gap: 20px;
 }
 
-.form-column h2 {
+.form-column h3 {
     color: var(--h2-color);
-    border-bottom: 2px solid var(--input-focus-border);
+    border-bottom: 2px solid var(--primary-color);
     padding-bottom: 10px;
     margin-bottom: 20px;
     font-size: 1.5rem;
-    transition: color 0.3s, border-color 0.3s;
 }
 
 .form-group {
@@ -117,10 +145,9 @@ h1 {
     margin-bottom: 5px;
     color: var(--label-color);
     font-weight: bold;
-    transition: color 0.3s;
 }
 
-.form-group input {
+.form-group input, .form-group textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--input-border);
@@ -128,71 +155,63 @@ h1 {
     box-sizing: border-box;
     background-color: var(--bg-color);
     color: var(--text-color);
-    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
 }
 
-.form-group input:focus {
-    outline: none;
-    border-color: var(--input-focus-border);
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-}
-
-button[type="submit"] {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background-color: #3498db;
+button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+    transition: background-color 0.3s;
 }
 
-button[type="submit"]:hover {
+button:hover {
     background-color: #2980b9;
-    box-shadow: 0 6px 8px rgba(52, 152, 219, 0.3);
 }
 
 #payslip-container {
     margin-top: 30px;
 }
 
-payslip-component {
-    display: block;
-    border: 1px solid var(--payslip-border);
-    border-r
-}
-
-nav {
-    background-color: #333;
-    overflow: hidden;
-    margin-bottom: 20px;
-}
-
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+/* Game Section */
+.game-area {
     display: flex;
     justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+#webcam-container {
+    border: 5px solid var(--secondary-color);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-nav li {
-    float: left;
+#game-info {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
 }
 
-nav li a {
-    display: block;
-    color: white;
+#label-container div {
+    margin-bottom: 0.5rem;
+}
+
+
+/* About Section */
+#about .partnership-inquiry-container {
+    margin-top: 3rem;
+}
+
+/* Footer */
+footer {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
     text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-nav li a:hover {
-    background-color: #111;
+    padding: 2rem 0;
+    margin-top: 2rem;
 }
