@@ -66,10 +66,15 @@ body {
     transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
 }
 
-.region-btn:hover, .duration-btn:hover {
+.region-btn:hover, .duration-btn:hover, .region-btn.selected, .duration-btn.selected {
     background-color: #ddd6fe;
     border-color: var(--main-color);
     transform: scale(1.05);
+}
+
+.region-btn.selected, .duration-btn.selected {
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(91, 33, 182, 0.4);
 }
 
 .hidden {
