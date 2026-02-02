@@ -98,28 +98,28 @@ const qnaList = [
 
 const infoList = [
     {
-        name: '뉴욕 (New York)',
+        name: '서울 (Seoul)',
         type: 'Urban',
-        desc: '잠들지 않는 도시, 뉴욕이 당신을 기다립니다! 화려한 스카이라인, 세계적인 박물관, 끝없는 쇼핑의 즐거움 속에서 당신의 열정을 재발견하게 될 거예요. 브로드웨이의 뮤지컬과 센트럴파크의 여유를 동시에 즐길 수 있는 최고의 도시입니다.',
-        img: 'https://images.unsplash.com/photo-1546436836-07a91091f160?q=80&w=2070&auto=format&fit=crop'
+        desc: '다이내믹한 매력의 도시, 서울이 당신을 기다립니다! 고궁의 고즈넉함과 첨단 도시의 화려함이 공존하는 서울에서 다채로운 경험을 즐겨보세요. K-팝, K-푸드, K-컬처의 모든 것을 만끽할 수 있는 최고의 도시입니다.',
+        img: 'https://images.unsplash.com/photo-1582294101150-1375d8623b37?q=80&w=2070&auto=format&fit=crop'
     },
     {
-        name: '스위스 (Switzerland)',
+        name: '강원도 (Gangwon-do)',
         type: 'Nature',
-        desc: '대자연의 품에서 진정한 힐링을 원한다면 스위스가 정답입니다. 웅장한 알프스 산맥, 에메랄드빛 호수, 푸른 초원이 어우러진 그림 같은 풍경 속에서 하이킹을 즐겨보세요. 복잡한 일상은 잊고 자연과 하나 되는 평화로운 시간을 가질 수 있습니다.',
-        img: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=2070&auto=format&fit=crop'
+        desc: '대자연의 숨결이 살아있는 강원도가 당신에게 진정한 휴식을 선사합니다. 설악산의 웅장함, 동해 바다의 푸른 물결, 청정한 숲 속에서 일상의 스트레스를 잊고 평화로운 시간을 가져보세요.',
+        img: 'https://images.unsplash.com/photo-1629853927645-a74c2b9f3b50?q=80&w=2070&auto=format&fit=crop'
     },
     {
-        name: '발리 (Bali)',
+        name: '제주도 (Jeju-do)',
         type: 'Beach',
-        desc: '휴양과 즐거움이 공존하는 파라다이스, 발리! 아름다운 해변에 누워 일광욕을 즐기거나, 요가와 명상으로 심신의 안정을 찾아보세요. 서핑, 스노클링 등 다양한 해양 액티비티와 함께라면 지루할 틈이 없을 거예요.',
-        img: 'https://images.unsplash.com/photo-1540202404-1b927b016f5a?q=80&w=2070&auto=format&fit=crop'
+        desc: '한국의 아름다운 보석, 제주도가 당신을 유혹합니다! 에메랄드빛 해변에서 여유를 즐기고, 한라산의 신비로운 자연을 탐험해보세요. 맛있는 향토 음식과 독특한 문화가 어우러진 꿈의 섬입니다.',
+        img: 'https://images.unsplash.com/photo-1647466175780-6060c2354728?q=80&w=2070&auto=format&fit=crop'
     },
     {
-        name: '페루 (Peru)',
+        name: '전주 (Jeonju)',
         type: 'Adventure',
-        desc: '고대 잉카 문명의 신비를 찾아 떠나는 모험, 페루가 당신을 부릅니다! 경이로운 마추픽추, 미스터리한 나스카 라인 등 상상 이상의 풍경들이 당신을 기다리고 있습니다. 평범한 여행이 지겹다면, 짜릿한 모험으로 가득한 페루로 떠나보세요.',
-        img: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=2070&auto=format&fit=crop'
+        desc: '전통과 맛의 고장, 전주에서 특별한 미식 모험을 시작해보세요! 한옥마을의 고즈넉한 풍경 속에서 한복을 입고 거닐거나, 길거리 음식과 막걸리 한상으로 오감을 만족시킬 수 있습니다. 새로운 문화적 경험을 원하는 당신에게 완벽한 곳입니다.',
+        img: 'https://images.unsplash.com/photo-1601614749302-3c2243d46387?q=80&w=2070&auto=format&fit=crop'
     }
 ];
 
@@ -139,7 +139,7 @@ async function getHiddenGems(countryName) {
     const chat = model.startChat({
         history: [{
             role: "user",
-            parts: [{ text: `너는 여행 전문가야. ${countryName}에 있는 숨겨진 명소 3곳을 추천해 줘. 각 명소에 대해 짧고 매력적인 설명을 덧붙여 줘. 응답은 JSON 형식으로 부탁해. 예시: [{"name": "장소1", "description": "설명1"}, {"name": "장소2", "description": "설명2"}]` }],
+            parts: [{ text: `너는 여행 전문가야. ${countryName}의 숨겨진 명소 3곳을 추천해 줘. 각 명소에 대해 짧고 매력적인 설명을 덧붙여 줘. 응답은 JSON 형식으로 부탁해. 예시: [{"name": "장소1", "description": "설명1"}, {"name": "장소2", "description": "설명2"}]` }],
         }],
     });
 
