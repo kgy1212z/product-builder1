@@ -149,80 +149,9 @@ body {
     margin-bottom: 30px;
 }
 
-.result-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.btn.secondary {
-    background-color: #ede9fe;
-    color: var(--main-color);
-    border: 2px solid var(--main-color);
-}
-
-.btn.secondary:hover {
-    background-color: #ddd6fe;
-}
-
-
-/* Recommendation Screen */
-#reco-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.reco-title {
-    font-size: 1.8rem;
-    color: #4c1d95;
-    margin-bottom: 20px;
-}
-
-#reco-list {
-    width: 100%;
-    text-align: left;
-    margin-bottom: 30px;
-}
-
-.reco-item {
-    background-color: #f3e8ff;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
-}
-
-.reco-item h3 {
-    margin-top: 0;
-    color: var(--main-color);
-}
-
-.reco-item p {
-    margin-bottom: 0;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-/* Loader */
-.loader {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid var(--main-color);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin: 20px auto;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-
 footer {
-    position: relative;
-    bottom: -20px;
+    position: absolute;
+    bottom: 10px;
     font-size: 0.8rem;
     color: #a7a2b0;
-    margin-top: 20px;
 }
