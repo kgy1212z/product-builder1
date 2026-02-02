@@ -3,20 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 인터랙티브 스토리</title>
+    <title>나의 다음 여행지는 어디일까?</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="story-container">
-        <div class="header">
-            <h1>AI 인터랙티브 스토리</h1>
-            <p>AI와 함께 당신만의 이야기를 만들어보세요. 아래 입력창에 원하는 행동을 입력하여 이야기를 시작할 수 있습니다.</p>
-        </div>
-        <div id="story-log"></div>
-    </div>
-    <div id="input-container">
-        <input type="text" id="user-input" placeholder="어떤 행동을 하시겠습니까? (예: '숲 속으로 들어간다')">
-        <button id="submit-btn">전송</button>
+    <div class="container">
+        <!-- 시작 화면 -->
+        <section id="start-screen">
+            <h1 class="title">나의 다음 여행지는 어디일까?</h1>
+            <p class="subtitle">간단한 테스트를 통해 당신의 성향에 꼭 맞는 여행지를 찾아보세요!</p>
+            <button id="start-btn" class="btn">테스트 시작하기</button>
+        </section>
+
+        <!-- 질문 화면 -->
+        <section id="qna-screen" class="hidden">
+            <div class="status-bar">
+                <div class="status-bar-inner"></div>
+            </div>
+            <h2 id="question-title" class="question-title"></h2>
+            <div id="choices" class="choices">
+                <!-- 선택지는 JavaScript로 동적으로 추가됩니다. -->
+            </div>
+        </section>
+
+        <!-- 결과 화면 -->
+        <section id="result-screen" class="hidden">
+            <h2 class="result-subtitle">당신에게 어울리는 여행지는...</h2>
+            <h1 id="result-name" class="result-name"></h1>
+            <div id="result-image"></div>
+            <p id="result-desc" class="result-desc"></p>
+            <button id="retry-btn" class="btn">다시 테스트하기</button>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 Ddalkkak. All Rights Reserved.</p>
+        </footer>
     </div>
     <script src="app.js"></script>
 </body>
