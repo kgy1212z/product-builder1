@@ -1,5 +1,3 @@
-import { GoogleGenerativeAI } from "https://cdn.jsdelivr.net/npm/@google/genai@latest/dist/index.min.js";
-
 // DOM Elements
 const startScreen = document.querySelector("#start-screen");
 const qnaScreen = document.querySelector("#qna-screen");
@@ -15,12 +13,7 @@ const choicesContainer = document.querySelector("#choices");
 const resultName = document.querySelector("#result-name");
 const resultImage = document.querySelector("#result-image");
 const resultDesc = document.querySelector("#result-desc");
-const recoList = document.querySelector("#reco-list"); // New
-
-// Gemini API Setup
-const API_KEY = "gen-lang-client-0060094265";
-const genAI = new GoogleGenerativeAI(API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+const recoListContainer = document.querySelector("#reco-list"); // Renamed for clarity
 
 // Data
 const qnaList = [
@@ -123,6 +116,29 @@ const infoList = [
     }
 ];
 
+const recoList = {
+    Urban: [
+        { name: "문화비축기지", description: "과거 석유 비축 기지에서 독특한 복합문화공간으로 재탄생한 곳입니다. 거대한 탱크 구조물 속에서 다양한 전시와 공연을 즐겨보세요." },
+        { name: "정동전망대", description: "서울시청 서소문청사 13층에 숨겨진 무료 전망대입니다. 덕수궁과 정동 일대의 아름다운 풍경을 한눈에 담을 수 있습니다." },
+        { name: "문래창작촌", description: "낡은 철공소 골목이 예술가들의 작업실과 아기자기한 카페로 변신한 곳입니다. 산업과 예술이 공존하는 이색적인 분위기를 느껴보세요." }
+    ],
+    Nature: [
+        { name: "백섬해상전망대 (고성)", description: "바다 위를 걷는 듯한 스릴을 느낄 수 있는 해상 스카이워크입니다. 발밑의 푸른 바다와 동해의 탁 트인 풍경을 감상할 수 있습니다." },
+        { name: "매봉산 바람의 언덕 (태백)", description: "거대한 풍력발전기와 광활한 배추밭이 어우러져 이국적인 풍경을 자아내는 곳입니다. 시원한 바람을 맞으며 스트레스를 날려보세요." },
+        { name: "초곡 용굴 촛대바위길 (삼척)", description: "기암괴석 해안 절벽을 따라 조성된 아름다운 산책로입니다. 자연의 위대함과 푸른 바다를 동시에 느낄 수 있습니다." }
+    ],
+    Beach: [
+        { name: "청굴물 (제주)", description: "바위가 자연적으로 파도를 막아주는 천연 수영장입니다. 맑고 잔잔한 물에서 안전하게 해수욕을 즐길 수 있는 숨은 명소입니다." },
+        { name: "산양큰엉곶 (제주)", description: "아름다운 해안 절벽과 드넓은 초원이 어우러진 숲길입니다. 제주의 원시적인 자연을 느끼며 산책하기 좋은 곳입니다." },
+        { name: "지미봉 (제주)", description: "성산일출봉과 우도가 한눈에 들어오는 환상적인 전망을 자랑하는 오름입니다. 일출, 일몰 명소로도 유명합니다." }
+    ],
+    Adventure: [
+        { name: "서학동 예술마을 (전주)", description: "전주 한옥마을의 번잡함에서 벗어나 조용하고 예술적인 분위기를 느낄 수 있는 곳입니다. 개성 있는 공방과 갤러리를 둘러보는 재미가 있습니다." },
+        { name: "한벽터널 (전주)", description: "일제강점기에 만들어진 옛 철도 터널로, 독특한 분위기 덕분에 레트로 감성의 사진을 남기기 좋은 포토 스팟입니다." },
+        { name: "덕진공원 (전주)", description: "여름이면 연못을 가득 메우는 거대한 연꽃으로 유명한 시민 공원입니다. 현지인처럼 여유롭게 산책하며 휴식을 취하기 좋습니다." }
+    ]
+};
+
 // State
 let qnaIdx = 0;
 let score = {
@@ -131,54 +147,11 @@ let score = {
     Beach: 0,
     Adventure: 0
 };
-let currentResultCountry = ''; // To store the country name for recommendations
-
-// Function to get hidden gems from Gemini API
-async function getHiddenGems(countryName) {
-    // A simple chat session to keep context
-    const chat = model.startChat({
-        history: [{
-            role: "user",
-            parts: [{ text: `너는 여행 전문가야. ${countryName}의 숨겨진 명소 3곳을 추천해 줘. 각 명소에 대해 짧고 매력적인 설명을 덧붙여 줘. 응답은 JSON 형식으로 부탁해. 예시: [{"name": "장소1", "description": "설명1"}, {"name": "장소2", "description": "설명2"}]` }],
-        }],
-    });
-
-    try {
-        const result = await chat.sendMessage(`추천해 줘`); // Send a follow-up message to generate content based on history
-        const response = await result.response;
-        const text = response.text();
-        console.log("Gemini Raw Response:", text); // Debugging: log raw response
-
-        // Attempt to parse JSON. Gemini might return additional text.
-        const jsonMatch = text.match(/```json\n([\s\S]*?)\n```/);
-        if (jsonMatch && jsonMatch[1]) {
-            return JSON.parse(jsonMatch[1]);
-        } else {
-            // Fallback for non-JSON or malformed JSON responses
-            console.warn("Gemini did not return clean JSON. Attempting fallback parse or default.");
-            // Try to extract useful information if JSON parsing fails
-            const fallbackGems = text.split('\n').filter(line => line.trim().length > 0 && !line.includes('```')).map(line => {
-                const parts = line.split(':');
-                if (parts.length >= 2) {
-                    return { name: parts[0].trim().replace(/^- /, ''), description: parts.slice(1).join(':').trim() };
-                }
-                return { name: line.trim(), description: '설명 없음' };
-            }).filter(gem => gem.name !== '설명 없음'); // Filter out generic error messages
-
-            if (fallbackGems.length > 0) {
-                return fallbackGems.slice(0, 3); // Return up to 3 fallback gems
-            }
-            return [{ name: "정보 없음", description: "AI가 추천 명소를 찾지 못했습니다." }];
-        }
-    } catch (error) {
-        console.error("Gemini API Hidden Gems 호출 중 오류 발생:", error);
-        return [{ name: "오류 발생", description: "명소 정보를 가져오는 데 실패했습니다." }];
-    }
-}
-
+let currentResultType = '';
 
 function calculateResult() {
     const resultType = Object.keys(score).reduce((a, b) => score[a] > score[b] ? a : b);
+    currentResultType = resultType;
     return infoList.find(info => info.type === resultType);
 }
 
@@ -187,7 +160,6 @@ function showResult() {
     resultScreen.classList.remove("hidden");
 
     const result = calculateResult();
-    currentResultCountry = result.name.split('(')[0].trim(); // Extract country name
     resultName.textContent = result.name;
     resultDesc.textContent = result.desc;
     
@@ -198,24 +170,23 @@ function showResult() {
     resultImage.appendChild(img);
 }
 
-async function showRecommendations() {
+function showRecommendations() {
     resultScreen.classList.add("hidden");
     recoScreen.classList.remove("hidden");
-    recoList.innerHTML = '<div class="loader"></div>'; // Show loader
+    recoListContainer.innerHTML = '<div class="loader"></div>';
 
-    const hiddenGems = await getHiddenGems(currentResultCountry);
-    recoList.innerHTML = ''; // Clear loader
+    // Simulate loading
+    setTimeout(() => {
+        recoListContainer.innerHTML = '';
+        const hiddenGems = recoList[currentResultType];
 
-    if (hiddenGems.length > 0 && hiddenGems[0].name !== "정보 없음") {
         hiddenGems.forEach(gem => {
             const item = document.createElement('div');
             item.classList.add('reco-item');
             item.innerHTML = `<h3>${gem.name}</h3><p>${gem.description}</p>`;
-            recoList.appendChild(item);
+            recoListContainer.appendChild(item);
         });
-    } else {
-        recoList.innerHTML = `<div class="reco-item"><p>${hiddenGems[0].description}</p></div>`;
-    }
+    }, 500); // 0.5초 로딩 시뮬레이션
 }
 
 function handleChoiceClick(event) {
@@ -246,7 +217,7 @@ function nextQuestion() {
         choicesContainer.appendChild(button);
     });
 
-    statusBar.style.width = `${((qnaIdx + 1) / qnaList.length) * 100}%`; // +1 for current question
+    statusBar.style.width = `${((qnaIdx + 1) / qnaList.length) * 100}%`;
 }
 
 function begin() {
@@ -256,21 +227,20 @@ function begin() {
 }
 
 function retry() {
-    // Reset state
     qnaIdx = 0;
     score = { Urban: 0, Nature: 0, Beach: 0, Adventure: 0 };
-    currentResultCountry = '';
+    currentResultType = '';
     
     resultScreen.classList.add("hidden");
-    recoScreen.classList.add("hidden"); // Ensure reco screen is hidden too
+    recoScreen.classList.add("hidden");
     startScreen.classList.remove("hidden");
 }
 
 // Event Listeners
 startBtn.addEventListener("click", begin);
 retryBtn.addEventListener("click", retry);
-recoBtn.addEventListener("click", showRecommendations); // New
-backBtn.addEventListener("click", () => { // New
+recoBtn.addEventListener("click", showRecommendations);
+backBtn.addEventListener("click", () => {
     recoScreen.classList.add("hidden");
     resultScreen.classList.remove("hidden");
 });
