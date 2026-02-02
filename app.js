@@ -7,57 +7,56 @@ const statusBar = document.querySelector(".status-bar-inner");
 const questionTitle = document.querySelector("#question-title");
 const choicesContainer = document.querySelector("#choices");
 const resultName = document.querySelector("#result-name");
-const resultImage = document.querySelector("#result-image");
 const resultDesc = document.querySelector("#result-desc");
 
-const END_POINT = 10; // Number of questions
+const NUM_QUESTIONS = 3; // Number of questions
 
 // New Data Structures
 const allDestinations = {
     '경기도': [
-        { name: '수원 화성', desc: '유네스코 세계문화유산인 수원 화성의 성곽길을 따라 걸으며 역사 속으로 시간 여행을 떠나보세요.', img: 'https://images.unsplash.com/photo-1592328929283-93c66a0d4a96?q=80&w=2070&auto=format&fit=crop', tags: ['history', 'walk', 'urban'] },
-        { name: '아침고요수목원', desc: '계절마다 다른 색의 옷을 입는 아름다운 정원입니다. 조용히 산책하며 자연 속에서 힐링을 경험하세요.', img: 'https://images.unsplash.com/photo-1547372274-9d0342995240?q=80&w=1974&auto=format&fit=crop', tags: ['nature', 'walk', 'scenery'] },
-        { name: '헤이리 예술마을', desc: '예술가들의 작업실, 갤러리, 개성 넘치는 카페가 모여있는 곳입니다. 예술적인 영감을 얻고 싶은 당신에게 추천합니다.', img: 'https://images.unsplash.com/photo-1633111165432-1b5c3d7e8a9c?q=80&w=2070&auto=format&fit=crop', tags: ['art', 'cafe', 'walk'] }
+        { name: '수원 화성', desc: '유네스코 세계문화유산인 수원 화성의 성곽길을 따라 걸으며 역사 속으로 시간 여행을 떠나보세요.', tags: ['history', 'walk', 'urban'] },
+        { name: '아침고요수목원', desc: '계절마다 다른 색의 옷을 입는 아름다운 정원입니다. 조용히 산책하며 자연 속에서 힐링을 경험하세요.', tags: ['nature', 'walk', 'scenery'] },
+        { name: '헤이리 예술마을', desc: '예술가들의 작업실, 갤러리, 개성 넘치는 카페가 모여있는 곳입니다. 예술적인 영감을 얻고 싶은 당신에게 추천합니다.', tags: ['art', 'cafe', 'walk'] }
     ],
     '강원도': [
-        { name: '설악산 국립공원', desc: '대한민국 최고의 명산, 설악산의 웅장한 풍경에 빠져보세요. 등산을 통해 성취감을 느끼고 싶은 당신에게 완벽한 곳입니다.', img: 'https://images.unsplash.com/photo-1575753908201-1975b3b1c618?q=80&w=2070&auto=format&fit=crop', tags: ['nature', 'scenery', 'activity', 'challenge'] },
-        { name: '강릉 경포해변', desc: '끝없이 펼쳐진 동해바다를 보며 마음의 평화를 찾아보세요. 해변 근처의 예쁜 카페에서 즐기는 커피 한 잔의 여유는 덤입니다.', img: 'https://images.unsplash.com/photo-1560920257-6959146a5f58?q=80&w=1974&auto=format&fit=crop', tags: ['beach', 'relax', 'cafe', 'sea'] },
-        { name: '양양 서피비치', desc: '서핑과 힙한 분위기를 즐길 수 있는 젊음의 해변입니다. 신나는 음악과 함께 자유로운 분위기를 만끽하고 싶은 당신에게 추천합니다.', img: 'https://images.unsplash.com/photo-1590080894107-e04439097c5e?q=80&w=2070&auto=format&fit=crop', tags: ['beach', 'activity', 'young', 'sea'] }
+        { name: '설악산 국립공원', desc: '대한민국 최고의 명산, 설악산의 웅장한 풍경에 빠져보세요. 등산을 통해 성취감을 느끼고 싶은 당신에게 완벽한 곳입니다.', tags: ['nature', 'scenery', 'activity', 'challenge'] },
+        { name: '강릉 경포해변', desc: '끝없이 펼쳐진 동해바다를 보며 마음의 평화를 찾아보세요. 해변 근처의 예쁜 카페에서 즐기는 커피 한 잔의 여유는 덤입니다.', tags: ['beach', 'relax', 'cafe', 'sea'] },
+        { name: '양양 서피비치', desc: '서핑과 힙한 분위기를 즐길 수 있는 젊음의 해변입니다. 신나는 음악과 함께 자유로운 분위기를 만끽하고 싶은 당신에게 추천합니다.', tags: ['beach', 'activity', 'young', 'sea'] }
     ],
     '충청북도': [
-        { name: '단양 만천하스카이워크', desc: '남한강 절벽 위에서 하늘을 걷는 듯한 짜릿함을 느껴보세요. 아름다운 풍경과 스릴을 동시에 즐길 수 있습니다.', img: 'https://images.unsplash.com/photo-1596238299836-8367f0872895?q=80&w=2070&auto=format&fit=crop', tags: ['scenery', 'activity', 'thrill'] },
-        { name: '청남대', desc: '한때 대통령의 별장이었던 비밀스러운 장소입니다. 잘 가꿔진 정원을 산책하며 여유로운 시간을 보내보세요.', img: 'https://images.unsplash.com/photo-1633596985477-f64f43997a96?q=80&w=1974&auto=format&fit=crop', tags: ['history', 'walk', 'relax'] },
-        { name: '충주호 유람선', desc: '내륙의 바다라고 불리는 충주호에서 유람선을 타며 그림 같은 풍경을 감상해보세요. 잔잔한 물결 위에서 평온함을 느낄 수 있습니다.', img: 'https://images.unsplash.com/photo-1591456658428-a4233036afa3?q=80&w=2070&auto=format&fit=crop', tags: ['nature', 'relax', 'scenery'] }
+        { name: '단양 만천하스카이워크', desc: '남한강 절벽 위에서 하늘을 걷는 듯한 짜릿함을 느껴보세요. 아름다운 풍경과 스릴을 동시에 즐길 수 있습니다.', tags: ['scenery', 'activity', 'thrill'] },
+        { name: '청남대', desc: '한때 대통령의 별장이었던 비밀스러운 장소입니다. 잘 가꿔진 정원을 산책하며 여유로운 시간을 보내보세요.', tags: ['history', 'walk', 'relax'] },
+        { name: '충주호 유람선', desc: '내륙의 바다라고 불리는 충주호에서 유람선을 타며 그림 같은 풍경을 감상해보세요. 잔잔한 물결 위에서 평온함을 느낄 수 있습니다.', tags: ['nature', 'relax', 'scenery'] }
     ],
     '충청남도': [
-        { name: '보령 대천해수욕장', desc: '젊음과 열기가 가득한 서해안 최대의 해수욕장입니다. 신나는 머드 축제와 다양한 해양 스포츠를 즐겨보세요.', img: 'https://images.unsplash.com/photo-1598918239019-86640c34b6b1?q=80&w=1974&auto=format&fit=crop', tags: ['beach', 'activity', 'young'] },
-        { name: '부여 궁남지', desc: '백제 무왕의 사랑 이야기가 깃든 대한민국 최초의 인공 연못입니다. 특히 여름밤, 연꽃 사이로 비치는 조명이 낭만적인 분위기를 자아냅니다.', img: 'https://images.unsplash.com/photo-1597320466485-695579911943?q=80&w=2070&auto=format&fit=crop', tags: ['history', 'walk', 'scenery', 'night', 'romance'] },
-        { name: '서산 해미읍성', desc: '조선시대의 모습을 고스란히 간직한 읍성입니다. 성곽을 따라 걸으며 역사의 숨결을 느끼고, 근처 맛집에서 맛있는 음식을 즐겨보세요.', img: 'https://images.unsplash.com/photo-1592328929283-93c66a0d4a96?q=80&w=2070&auto=format&fit=crop', tags: ['history', 'walk', 'food'] }
+        { name: '보령 대천해수욕장', desc: '젊음과 열기가 가득한 서해안 최대의 해수욕장입니다. 신나는 머드 축제와 다양한 해양 스포츠를 즐겨보세요.', tags: ['beach', 'activity', 'young'] },
+        { name: '부여 궁남지', desc: '백제 무왕의 사랑 이야기가 깃든 대한민국 최초의 인공 연못입니다. 특히 여름밤, 연꽃 사이로 비치는 조명이 낭만적인 분위기를 자아냅니다.', tags: ['history', 'walk', 'scenery', 'night', 'romance'] },
+        { name: '서산 해미읍성', desc: '조선시대의 모습을 고스란히 간직한 읍성입니다. 성곽을 따라 걸으며 역사의 숨결을 느끼고, 근처 맛집에서 맛있는 음식을 즐겨보세요.', tags: ['history', 'walk', 'food'] }
     ],
     '전라북도': [
-        { name: '전주 한옥마을', desc: '맛과 멋의 고장, 전주에서 오감이 즐거운 미식 모험을 시작해보세요! 한복을 입고 고즈넉한 한옥마을을 거닐며 다양한 길거리 음식을 맛볼 수 있습니다.', img: 'https://images.unsplash.com/photo-1601614749302-3c2243d46387?q=80&w=2070&auto=format&fit=crop', tags: ['history', 'food', 'activity', 'walk'] },
-        { name: '진안 마이산', desc: '두 개의 봉우리가 말의 귀를 닮았다고 해서 이름 붙여진 신비로운 산입니다. 수수께끼 같은 돌탑들을 보며 자연의 경이로움을 느껴보세요.', img: 'https://images.unsplash.com/photo-1579282362546-d1c73a613d9a?q=80&w=2070&auto=format&fit=crop', tags: ['nature', 'scenery', 'mystery'] },
-        { name: '군산 시간여행마을', desc: '일제강점기 시절의 건축물들이 남아있어, 마치 시간을 거슬러 올라간 듯한 느낌을 주는 곳입니다. 근대 의상을 입고 특별한 사진을 남겨보세요.', img: 'https://images.unsplash.com/photo-1620575304386-2a6d71b3a323?q=80&w=1974&auto=format&fit=crop', tags: ['history', 'walk', 'photo'] }
+        { name: '전주 한옥마을', desc: '맛과 멋의 고장, 전주에서 오감이 즐거운 미식 모험을 시작해보세요! 한복을 입고 고즈넉한 한옥마을을 거닐며 다양한 길거리 음식을 맛볼 수 있습니다.', tags: ['history', 'food', 'activity', 'walk'] },
+        { name: '진안 마이산', desc: '두 개의 봉우리가 말의 귀를 닮았다고 해서 이름 붙여진 신비로운 산입니다. 수수께끼 같은 돌탑들을 보며 자연의 경이로움을 느껴보세요.', tags: ['nature', 'scenery', 'mystery'] },
+        { name: '군산 시간여행마을', desc: '일제강점기 시절의 건축물들이 남아있어, 마치 시간을 거슬러 올라간 듯한 느낌을 주는 곳입니다. 근대 의상을 입고 특별한 사진을 남겨보세요.', tags: ['history', 'walk', 'photo'] }
     ],
     '전라남도': [
-        { name: '여수 밤바다', desc: '낭만적인 버스킹 음악과 화려한 조명이 어우러진 여수의 밤바다를 거닐어보세요. 낭만적인 분위기에 흠뻑 취하고 싶은 당신에게 최고의 장소입니다.', img: 'https://images.unsplash.com/photo-1599818496435-0865c6922938?q=80&w=1969&auto=format&fit=crop', tags: ['sea', 'night', 'romance', 'urban'] },
-        { name: '순천만 국가정원', desc: '세계 각국의 아름다운 정원을 한곳에 모아놓은 거대한 힐링 공간입니다. 계절마다 피어나는 다채로운 꽃들 사이를 거닐며 지친 마음에 휴식을 선물하세요.', img: 'https://images.unsplash.com/photo-1597320466485-695579911943?q=80&w=2070&auto=format&fit=crop', tags: ['nature', 'walk', 'scenery', 'relax'] },
-        { name: '담양 죽녹원', desc: '하늘을 향해 뻗은 대나무 숲 사이를 걸으며 상쾌한 공기를 마셔보세요. 복잡한 생각을 잠시 잊고 싶을 때, 최고의 힐링을 선사할 것입니다.', img: 'https://images.unsplash.com/photo-1588262013854-a7bf8f10fa4a?q=80&w=2070&auto=format&fit=crop', tags: ['nature', 'walk', 'relax'] }
+        { name: '여수 밤바다', desc: '낭만적인 버스킹 음악과 화려한 조명이 어우러진 여수의 밤바다를 거닐어보세요. 낭만적인 분위기에 흠뻑 취하고 싶은 당신에게 최고의 장소입니다.', tags: ['sea', 'night', 'romance', 'urban'] },
+        { name: '순천만 국가정원', desc: '세계 각국의 아름다운 정원을 한곳에 모아놓은 거대한 힐링 공간입니다. 계절마다 피어나는 다채로운 꽃들 사이를 거닐며 지친 마음에 휴식을 선물하세요.', tags: ['nature', 'walk', 'scenery', 'relax'] },
+        { name: '담양 죽녹원', desc: '하늘을 향해 뻗은 대나무 숲 사이를 걸으며 상쾌한 공기를 마셔보세요. 복잡한 생각을 잠시 잊고 싶을 때, 최고의 힐링을 선사할 것입니다.', tags: ['nature', 'walk', 'relax'] }
     ],
     '경상북도': [
-        { name: '경주 대릉원/황리단길', desc: '신라의 역사가 살아 숨 쉬는 경주에서 특별한 시간 여행을 즐겨보세요. 고분 사이를 산책하고, 황리단길의 아기자기한 카페와 맛집을 탐방하는 재미가 있습니다.', img: 'https://images.unsplash.com/photo-1589922579133-148278c43916?q=80&w=1932&auto=format&fit=crop', tags: ['history', 'food', 'walk', 'photo'] },
-        { name: '안동 하회마을', desc: '전통적인 유교 문화와 고택의 아름다움을 느낄 수 있는 유네스코 세계유산입니다. 시간이 멈춘 듯한 마을에서 진정한 한국의 미를 느껴보세요.', img: 'https://images.unsplash.com/photo-1589922578589-93b392a4a350?q=80&w=2070&auto=format&fit=crop', tags: ['history', 'tradition', 'relax'] },
-        { name: '포항 스페이스워크', desc: '마치 구름 위를 걷는 듯한, 짜릿하고 환상적인 경험을 할 수 있는 체험형 조형물입니다. 포항의 아름다운 풍경을 360도로 감상해보세요.', img: 'https://images.unsplash.com/photo-1583855359194-e6739b674a27?q=80&w=2070&auto=format&fit=crop', tags: ['scenery', 'thrill', 'photo', 'sea'] }
+        { name: '경주 대릉원/황리단길', desc: '신라의 역사가 살아 숨 쉬는 경주에서 특별한 시간 여행을 즐겨보세요. 고분 사이를 산책하고, 황리단길의 아기자기한 카페와 맛집을 탐방하는 재미가 있습니다.', tags: ['history', 'food', 'walk', 'photo'] },
+        { name: '안동 하회마을', desc: '전통적인 유교 문화와 고택의 아름다움을 느낄 수 있는 유네스코 세계유산입니다. 시간이 멈춘 듯한 마을에서 진정한 한국의 미를 느껴보세요.', tags: ['history', 'tradition', 'relax'] },
+        { name: '포항 스페이스워크', desc: '마치 구름 위를 걷는 듯한, 짜릿하고 환상적인 경험을 할 수 있는 체험형 조형물입니다. 포항의 아름다운 풍경을 360도로 감상해보세요.', tags: ['scenery', 'thrill', 'photo', 'sea'] }
     ],
     '경상남도': [
-        { name: '통영 루지/케이블카', desc: '짜릿한 루지를 타고 트랙을 질주하거나, 케이블카를 타고 한려수도의 절경을 감상해보세요. 활동적인 여행을 원하는 당신에게 안성맞춤입니다.', img: 'https://images.unsplash.com/photo-1603831742433-513529a398d5?q=80&w=2070&auto=format&fit=crop', tags: ['activity', 'scenery', 'thrill', 'sea'] },
-        { name: '거제 바람의 언덕', desc: '푸른 바다와 초원, 커다란 풍차가 어우러져 그림 같은 풍경을 만들어내는 곳입니다. 어디서 사진을 찍어도 인생샷을 건질 수 있습니다.', img: 'https://images.unsplash.com/photo-1573855526365-1c50a041c2a3?q=80&w=1974&auto=format&fit=crop', tags: ['sea', 'scenery', 'photo', 'relax'] },
-        { name: '남해 독일마을', desc: '독일 교포들이 정착하며 만들어진 이국적인 마을입니다. 붉은 지붕의 집들과 푸른 남해 바다가 어우러져 동화 같은 풍경을 선사합니다.', img: 'https://images.unsplash.com/photo-1582103043888-283827e8a43a?q=80&w=2070&auto=format&fit=crop', tags: ['sea', 'photo', 'exotic', 'cafe'] }
+        { name: '통영 루지/케이블카', desc: '짜릿한 루지를 타고 트랙을 질주하거나, 케이블카를 타고 한려수도의 절경을 감상해보세요. 활동적인 여행을 원하는 당신에게 안성맞춤입니다.', tags: ['activity', 'scenery', 'thrill', 'sea'] },
+        { name: '거제 바람의 언덕', desc: '푸른 바다와 초원, 커다란 풍차가 어우러져 그림 같은 풍경을 만들어내는 곳입니다. 어디서 사진을 찍어도 인생샷을 건질 수 있습니다.', tags: ['sea', 'scenery', 'photo', 'relax'] },
+        { name: '남해 독일마을', desc: '독일 교포들이 정착하며 만들어진 이국적인 마을입니다. 붉은 지붕의 집들과 푸른 남해 바다가 어우러져 동화 같은 풍경을 선사합니다.', tags: ['sea', 'photo', 'exotic', 'cafe'] }
     ],
     '제주도': [
-        { name: '우도', desc: '에메랄드빛 바다와 하얀 산호 해변이 반겨주는 아름다운 섬 속의 섬. 스쿠터를 타고 해안도로를 달리며 자유를 만끽하거나, 땅콩 아이스크림을 맛보며 여유를 즐겨보세요.', img: 'https://images.unsplash.com/photo-1599380961834-8c03565e3b50?q=80&w=2070&auto=format&fit=crop', tags: ['beach', 'activity', 'scenery', 'cafe', 'sea'] },
-        { name: '한라산 국립공원', desc: '대한민국에서 가장 높은 산, 한라산에 도전해보세요. 힘든 등반 끝에 만나는 백록담의 절경은 평생 잊지 못할 감동을 선사할 것입니다.', img: 'https://images.unsplash.com/photo-1629853927645-a74c2b9f3b50?q=80&w=2070&auto=format&fit=crop', tags: ['nature', 'activity', 'challenge', 'scenery'] },
-        { name: '애월 카페거리', desc: '아름다운 제주 바다를 보며 커피 한 잔의 여유를 즐길 수 있는 곳입니다. 개성 넘치는 카페들 사이를 거닐며, 낭만적인 시간을 보내보세요.', img: 'https://images.unsplash.com/photo-1623961919833-333333215893?q=80&w=2070&auto=format&fit=crop', tags: ['sea', 'cafe', 'relax', 'photo'] }
+        { name: '우도', desc: '에메랄드빛 바다와 하얀 산호 해변이 반겨주는 아름다운 섬 속의 섬. 스쿠터를 타고 해안도로를 달리며 자유를 만끽하거나, 땅콩 아이스크림을 맛보며 여유를 즐겨보세요.', tags: ['beach', 'activity', 'scenery', 'cafe', 'sea'] },
+        { name: '한라산 국립공원', desc: '대한민국에서 가장 높은 산, 한라산에 도전해보세요. 힘든 등반 끝에 만나는 백록담의 절경은 평생 잊지 못할 감동을 선사할 것입니다.', tags: ['nature', 'activity', 'challenge', 'scenery'] },
+        { name: '애월 카페거리', desc: '아름다운 제주 바다를 보며 커피 한 잔의 여유를 즐길 수 있는 곳입니다. 개성 넘치는 카페들 사이를 거닐며, 낭만적인 시간을 보내보세요.', tags: ['sea', 'cafe', 'relax', 'photo'] }
     ]
 };
 
@@ -88,8 +87,6 @@ const qnaList = [
     },
 ];
 
-const NUM_QUESTIONS = 3; // Number of new questions
-
 // State
 let qnaIdx = 0;
 let selectedRegion = '';
@@ -97,30 +94,27 @@ let personalityScore = {};
 
 function calculateResult() {
     const regionDestinations = allDestinations[selectedRegion];
-    if (!regionDestinations) return infoList[0]; // Fallback
+    if (!regionDestinations) return allDestinations['경기도'][0]; // Fallback
 
-    // Find the personality tag with the highest score
     const sortedScores = Object.entries(personalityScore).sort((a, b) => b[1] - a[1]);
     
     let bestMatch = regionDestinations[0];
     let maxScore = -1;
 
-    // Find the destination that best matches the user's personality
     regionDestinations.forEach(destination => {
         let currentScore = 0;
-        // Give higher weight to top personality tags
+        destination.tags.forEach(tag => {
+            if (personalityScore[tag]) {
+                currentScore += personalityScore[tag];
+            }
+        });
+        
         if (sortedScores.length > 0 && destination.tags.includes(sortedScores[0][0])) {
             currentScore += 3;
         }
         if (sortedScores.length > 1 && destination.tags.includes(sortedScores[1][0])) {
             currentScore += 2;
         }
-        // Add points for any other matching tags
-        destination.tags.forEach(tag => {
-            if (personalityScore[tag]) {
-                currentScore += personalityScore[tag];
-            }
-        });
 
         if (currentScore > maxScore) {
             maxScore = currentScore;
@@ -138,22 +132,12 @@ function showResult() {
     const result = calculateResult();
     resultName.textContent = result.name;
     resultDesc.textContent = result.desc;
-    
-    const img = document.createElement('img');
-    img.src = result.img;
-    img.alt = result.name;
-    resultImage.innerHTML = '';
-    resultImage.appendChild(img);
 }
 
 function handleChoiceClick(event) {
     const selectedTypes = JSON.parse(event.currentTarget.dataset.type);
     selectedTypes.forEach(type => {
-        if (personalityScore[type]) {
-            personalityScore[type] += 1;
-        } else {
-            personalityScore[type] = 1;
-        }
+        personalityScore[type] = (personalityScore[type] || 0) + 1;
     });
 
     qnaIdx++;
@@ -165,6 +149,7 @@ function handleChoiceClick(event) {
 }
 
 function nextQuestion() {
+    statusBar.style.width = `${((qnaIdx + 1) / NUM_QUESTIONS) * 100}%`;
     const currentQ = qnaList[qnaIdx];
     questionTitle.textContent = currentQ.q;
     choicesContainer.innerHTML = '';
@@ -177,8 +162,6 @@ function nextQuestion() {
         button.addEventListener('click', handleChoiceClick);
         choicesContainer.appendChild(button);
     });
-
-    statusBar.style.width = `${((qnaIdx + 1) / NUM_QUESTIONS) * 100}%`;
 }
 
 function beginTest(region) {
@@ -193,11 +176,15 @@ function beginTest(region) {
 }
 
 function retry() {
+    // Clear previous results
+    resultName.textContent = '';
+    resultDesc.textContent = '';
+
     resultScreen.classList.add("hidden");
     regionScreen.classList.remove("hidden");
 }
 
-// Event Listeners for new region selection screen
+// Event Listeners
 document.querySelectorAll('.region-btn').forEach(button => {
     button.addEventListener('click', (event) => {
         const region = event.target.dataset.region;
