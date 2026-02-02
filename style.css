@@ -34,7 +34,7 @@ body {
 }
 
 /* Screens */
-#region-selection-screen, #qna-screen, #result-screen {
+#region-selection-screen, #duration-selection-screen, #qna-screen, #result-screen {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -47,7 +47,14 @@ body {
     width: 100%;
 }
 
-.region-btn {
+.duration-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.region-btn, .duration-btn {
     background-color: #ede9fe;
     color: var(--text-color);
     font-family: 'Jua', sans-serif;
@@ -59,7 +66,7 @@ body {
     transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
 }
 
-.region-btn:hover {
+.region-btn:hover, .duration-btn:hover {
     background-color: #ddd6fe;
     border-color: var(--main-color);
     transform: scale(1.05);
