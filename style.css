@@ -1,217 +1,103 @@
-:root {
-    --primary-color: #3498db;
-    --secondary-color: #2c3e50;
-    --bg-color: #f4f7f6;
-    --text-color: #333;
-    --container-bg: #fff;
-    --input-border: #ccc;
-    --h1-color: #2c3e50;
-    --h2-color: #34495e;
-    --label-color: #555;
-    --white-color: #fff;
-    --light-gray-color: #ecf0f1;
-    --noise-opacity: 0.05;
-}
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 
 body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    font-family: 'Nanum Gothic', sans-serif;
+    background-color: #121212;
+    color: #E0E0E0;
     margin: 0;
     padding: 0;
-    line-height: 1.6;
-}
-
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Header and Navigation */
-header {
-    background-color: var(--white-color);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-nav {
     display: flex;
+    flex-direction: column;
+    height: 100vh;
     justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
 }
 
-nav .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    text-decoration: none;
-}
-
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-nav li a {
-    display: block;
-    color: var(--secondary-color);
-    padding: 0 1rem;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s;
-}
-
-nav li a:hover {
-    color: var(--primary-color);
-}
-
-/* Main sections */
-main {
-    padding-top: 2rem;
-}
-
-section {
-    padding: 4rem 0;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-section:last-of-type {
-    border-bottom: none;
-}
-
-section h2 {
-    text-align: center;
-    font-size: 2.5rem;
-    color: var(--h2-color);
-    margin-bottom: 2rem;
-}
-
-section p {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto 2rem auto;
-    color: var(--label-color);
-}
-
-/* Hero Section */
-.hero {
-    text-align: center;
-    padding: 6rem 0;
-    background-color: var(--light-gray-color);
-}
-
-.hero h1 {
-    font-size: 3.5rem;
-    color: var(--h1-color);
-    margin-bottom: 1rem;
-}
-
-/* Form Styles */
-#payslip-form, .partnership-inquiry-form {
-    max-width: 800px;
-    margin: 2rem auto;
-    background: var(--white-color);
+#story-container {
+    flex-grow: 1;
+    overflow-y: auto;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.form-column h3 {
-    color: var(--h2-color);
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 10px;
+.header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #333;
     margin-bottom: 20px;
-    font-size: 1.5rem;
 }
 
-.form-group {
-    margin-bottom: 15px;
+.header h1 {
+    color: #FFFFFF;
+    margin-bottom: 10px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: var(--label-color);
-    font-weight: bold;
+#story-log {
+    flex-grow: 1;
 }
 
-.form-group input, .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--input-border);
+.story-paragraph {
+    margin-bottom: 1em;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    font-size: 1.1rem;
+}
+
+.user-choice {
+    color: #BB86FC;
+    font-style: italic;
+    text-align: right;
+    margin-bottom: 1em;
+}
+
+#input-container {
+    display: flex;
+    padding: 20px;
+    border-top: 1px solid #333;
+    background-color: #1F1F1F;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 12px;
+    border: 1px solid #333;
     border-radius: 5px;
-    box-sizing: border-box;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: #252525;
+    color: #E0E0E0;
+    font-size: 1rem;
 }
 
-button {
-    display: inline-block;
+#submit-btn {
     padding: 12px 24px;
-    background-color: var(--primary-color);
-    color: white;
     border: none;
     border-radius: 5px;
+    background-color: #6200EE;
+    color: white;
+    margin-left: 10px;
     cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: bold;
+    font-size: 1rem;
     transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #2980b9;
+#submit-btn:hover {
+    background-color: #3700B3;
 }
 
-#payslip-container {
-    margin-top: 30px;
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
 }
 
-/* Game Section */
-.game-area {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-#webcam-container {
-    border: 5px solid var(--secondary-color);
-    border-radius: 10px;
-    overflow: hidden;
+::-webkit-scrollbar-track {
+    background: #1F1F1F;
 }
 
-#game-info {
-    font-size: 1.2rem;
-    color: var(--secondary-color);
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
 }
 
-#label-container div {
-    margin-bottom: 0.5rem;
-}
-
-
-/* About Section */
-#about .partnership-inquiry-container {
-    margin-top: 3rem;
-}
-
-/* Footer */
-footer {
-    background-color: var(--secondary-color);
-    color: var(--white-color);
-    text-align: center;
-    padding: 2rem 0;
-    margin-top: 2rem;
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
