@@ -29,6 +29,8 @@ body {
     text-align: center;
     padding: 40px;
     box-sizing: border-box;
+    position: relative;
+    padding-bottom: 60px; /* Add padding to make space for footer */
 }
 
 /* Screens */
@@ -175,8 +177,9 @@ body {
 }
 
 footer {
-    position: absolute;
-    bottom: 10px;
+    position: relative;
+    bottom: -20px;
     font-size: 0.8rem;
     color: #a7a2b0;
+    margin-top: 40px;
 }
