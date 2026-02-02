@@ -32,10 +32,35 @@ body {
 }
 
 /* Screens */
-#start-screen, #qna-screen, #result-screen {
+#region-selection-screen, #qna-screen, #result-screen {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.region-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+}
+
+.region-btn {
+    background-color: #ede9fe;
+    color: var(--text-color);
+    font-family: 'Jua', sans-serif;
+    font-size: 1.1rem;
+    padding: 20px 10px;
+    border: 2px solid var(--light-gray);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.region-btn:hover {
+    background-color: #ddd6fe;
+    border-color: var(--main-color);
+    transform: scale(1.05);
 }
 
 .hidden {
