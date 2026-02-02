@@ -1,15 +1,26 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 // DOM Elements
 const startScreen = document.querySelector("#start-screen");
 const qnaScreen = document.querySelector("#qna-screen");
 const resultScreen = document.querySelector("#result-screen");
+const recoScreen = document.querySelector("#reco-screen"); // New
 const startBtn = document.querySelector("#start-btn");
 const retryBtn = document.querySelector("#retry-btn");
+const recoBtn = document.querySelector("#reco-btn"); // New
+const backBtn = document.querySelector("#back-btn"); // New
 const statusBar = document.querySelector(".status-bar-inner");
 const questionTitle = document.querySelector("#question-title");
 const choicesContainer = document.querySelector("#choices");
 const resultName = document.querySelector("#result-name");
 const resultImage = document.querySelector("#result-image");
 const resultDesc = document.querySelector("#result-desc");
+const recoList = document.querySelector("#reco-list"); // New
+
+// Gemini API Setup
+const API_KEY = "gen-lang-client-0060094265";
+const genAI = new GoogleGenerativeAI(API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 // Data
 const qnaList = [
@@ -120,9 +131,53 @@ let score = {
     Beach: 0,
     Adventure: 0
 };
+let currentResultCountry = ''; // To store the country name for recommendations
+
+// Function to get hidden gems from Gemini API
+async function getHiddenGems(countryName) {
+    // A simple chat session to keep context
+    const chat = model.startChat({
+        history: [{
+            role: "user",
+            parts: [{ text: `너는 여행 전문가야. ${countryName}에 있는 숨겨진 명소 3곳을 추천해 줘. 각 명소에 대해 짧고 매력적인 설명을 덧붙여 줘. 응답은 JSON 형식으로 부탁해. 예시: [{"name": "장소1", "description": "설명1"}, {"name": "장소2", "description": "설명2"}]` }],
+        }],
+    });
+
+    try {
+        const result = await chat.sendMessage(`추천해 줘`); // Send a follow-up message to generate content based on history
+        const response = await result.response;
+        const text = response.text();
+        console.log("Gemini Raw Response:", text); // Debugging: log raw response
+
+        // Attempt to parse JSON. Gemini might return additional text.
+        const jsonMatch = text.match(/```json\n([\s\S]*?)\n```/);
+        if (jsonMatch && jsonMatch[1]) {
+            return JSON.parse(jsonMatch[1]);
+        } else {
+            // Fallback for non-JSON or malformed JSON responses
+            console.warn("Gemini did not return clean JSON. Attempting fallback parse or default.");
+            // Try to extract useful information if JSON parsing fails
+            const fallbackGems = text.split('\n').filter(line => line.trim().length > 0 && !line.includes('```')).map(line => {
+                const parts = line.split(':');
+                if (parts.length >= 2) {
+                    return { name: parts[0].trim().replace(/^- /, ''), description: parts.slice(1).join(':').trim() };
+                }
+                return { name: line.trim(), description: '설명 없음' };
+            }).filter(gem => gem.name !== '설명 없음'); // Filter out generic error messages
+
+            if (fallbackGems.length > 0) {
+                return fallbackGems.slice(0, 3); // Return up to 3 fallback gems
+            }
+            return [{ name: "정보 없음", description: "AI가 추천 명소를 찾지 못했습니다." }];
+        }
+    } catch (error) {
+        console.error("Gemini API Hidden Gems 호출 중 오류 발생:", error);
+        return [{ name: "오류 발생", description: "명소 정보를 가져오는 데 실패했습니다." }];
+    }
+}
+
 
 function calculateResult() {
-    // Find the type with the highest score
     const resultType = Object.keys(score).reduce((a, b) => score[a] > score[b] ? a : b);
     return infoList.find(info => info.type === resultType);
 }
@@ -132,6 +187,7 @@ function showResult() {
     resultScreen.classList.remove("hidden");
 
     const result = calculateResult();
+    currentResultCountry = result.name.split('(')[0].trim(); // Extract country name
     resultName.textContent = result.name;
     resultDesc.textContent = result.desc;
     
@@ -140,6 +196,26 @@ function showResult() {
     img.alt = result.name;
     resultImage.innerHTML = '';
     resultImage.appendChild(img);
+}
+
+async function showRecommendations() {
+    resultScreen.classList.add("hidden");
+    recoScreen.classList.remove("hidden");
+    recoList.innerHTML = '<div class="loader"></div>'; // Show loader
+
+    const hiddenGems = await getHiddenGems(currentResultCountry);
+    recoList.innerHTML = ''; // Clear loader
+
+    if (hiddenGems.length > 0 && hiddenGems[0].name !== "정보 없음") {
+        hiddenGems.forEach(gem => {
+            const item = document.createElement('div');
+            item.classList.add('reco-item');
+            item.innerHTML = `<h3>${gem.name}</h3><p>${gem.description}</p>`;
+            recoList.appendChild(item);
+        });
+    } else {
+        recoList.innerHTML = `<div class="reco-item"><p>${hiddenGems[0].description}</p></div>`;
+    }
 }
 
 function handleChoiceClick(event) {
@@ -170,7 +246,7 @@ function nextQuestion() {
         choicesContainer.appendChild(button);
     });
 
-    statusBar.style.width = `${(qnaIdx / qnaList.length) * 100}%`;
+    statusBar.style.width = `${((qnaIdx + 1) / qnaList.length) * 100}%`; // +1 for current question
 }
 
 function begin() {
@@ -183,10 +259,18 @@ function retry() {
     // Reset state
     qnaIdx = 0;
     score = { Urban: 0, Nature: 0, Beach: 0, Adventure: 0 };
+    currentResultCountry = '';
     
     resultScreen.classList.add("hidden");
+    recoScreen.classList.add("hidden"); // Ensure reco screen is hidden too
     startScreen.classList.remove("hidden");
 }
 
+// Event Listeners
 startBtn.addEventListener("click", begin);
 retryBtn.addEventListener("click", retry);
+recoBtn.addEventListener("click", showRecommendations); // New
+backBtn.addEventListener("click", () => { // New
+    recoScreen.classList.add("hidden");
+    resultScreen.classList.remove("hidden");
+});

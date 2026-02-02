@@ -32,7 +32,19 @@
             <h1 id="result-name" class="result-name"></h1>
             <div id="result-image"></div>
             <p id="result-desc" class="result-desc"></p>
-            <button id="retry-btn" class="btn">다시 테스트하기</button>
+            <div class="result-buttons">
+                <button id="retry-btn" class="btn">다시 테스트하기</button>
+                <button id="reco-btn" class="btn secondary">숨은 명소 추천받기</button>
+            </div>
+        </section>
+
+        <!-- 추천 화면 -->
+        <section id="reco-screen" class="hidden">
+            <h2 class="reco-title">이런 곳은 어때요?</h2>
+            <div id="reco-list">
+                <!-- 추천 명소는 JavaScript로 동적으로 추가됩니다. -->
+            </div>
+            <button id="back-btn" class="btn">뒤로 가기</button>
         </section>
 
         <footer>
