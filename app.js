@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "https://cdn.jsdelivr.net/npm/@google/genai@latest/dist/index.min.js";
 
 // DOM Elements
 const startScreen = document.querySelector("#start-screen");
