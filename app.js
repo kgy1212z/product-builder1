@@ -175,8 +175,26 @@ const destinations = {
 document.addEventListener('DOMContentLoaded', () => {
     const themeFiltersContainer = document.getElementById('theme-filters');
     const destinationsGrid = document.getElementById('destinations-grid');
+    const modalOverlay = document.getElementById('map-modal');
+    const modalCloseBtn = document.querySelector('.modal-close');
+    const mapContainer = document.getElementById('map-container');
 
     let activeTheme = 'history'; // Set default theme
+
+    const openModal = (placeName) => {
+        mapContainer.innerHTML = ''; // Clear previous map
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(placeName)}&output=embed`;
+        iframe.allowFullscreen = true;
+        iframe.loading = 'lazy';
+        mapContainer.appendChild(iframe);
+        modalOverlay.classList.remove('hidden');
+    };
+
+    const closeModal = () => {
+        modalOverlay.classList.add('hidden');
+        mapContainer.innerHTML = ''; // Clear map on close
+    };
 
     // Function to render destination cards
     const renderDestinations = (theme) => {
@@ -186,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedDestinations.forEach(dest => {
             const card = document.createElement('div');
             card.className = 'destination-card';
+            card.dataset.name = dest.name; // Add data attribute for the place name
             card.innerHTML = `
                 <img src="${dest.img}" alt="${dest.name}" class="card-img">
                 <div class="card-body">
@@ -211,16 +230,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
             button.addEventListener('click', () => {
                 activeTheme = key;
-                // Update active class on buttons
                 document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                // Render destinations for the new active theme
                 renderDestinations(activeTheme);
             });
 
             themeFiltersContainer.appendChild(button);
         }
     };
+
+    // --- Event Listeners ---
+
+    // Open modal when a destination card is clicked
+    destinationsGrid.addEventListener('click', (e) => {
+        const card = e.target.closest('.destination-card');
+        if (card && card.dataset.name) {
+            openModal(card.dataset.name);
+        }
+    });
+
+    // Close modal events
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            closeModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modalOverlay.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
 
     // Initial Render
     renderThemeButtons();
