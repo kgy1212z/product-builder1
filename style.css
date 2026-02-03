@@ -381,3 +381,91 @@ footer {
     color: #9ca3af;
 }
 
+
+/* Header Buttons */
+.header-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Card Actions */
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.add-to-course-btn {
+    background-color: #ede9fe;
+    color: var(--main-color);
+    border: 1px solid transparent;
+    border-radius: 15px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-family: "Jua", sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-to-course-btn:hover {
+    background-color: var(--main-color);
+    color: var(--white);
+    transform: scale(1.05);
+}
+
+/* Trip Course Modal */
+.trip-course-list {
+    list-style: none;
+    padding: 0;
+    height: calc(100% - 100px); /* Adjust based on header/footer */
+    overflow-y: auto;
+}
+
+.trip-course-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.trip-course-item:last-child {
+    border-bottom: none;
+}
+
+.trip-course-item span {
+    font-size: 1.1rem;
+}
+
+.trip-course-item button {
+    background-color: transparent;
+    border: none;
+    color: #ef4444;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.modal-footer {
+    padding-top: 15px;
+    text-align: right;
+}
+
+.btn-secondary {
+    background-color: #e5e7eb;
+    color: #374151;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-family: "Jua", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #d1d5db;
+}
+

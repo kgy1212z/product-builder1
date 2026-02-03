@@ -1,4 +1,6 @@
-// New data structure by neighborhood
+// =================================================================================
+// Data Structures
+// =================================================================================
 const neighborhoods = {
     "종로구": "종로구",
     "중구": "중구",
@@ -8,31 +10,6 @@ const neighborhoods = {
     "서초구/강남구": "서초/강남",
     "송파구": "송파구",
 };
-
-// Helper function to get beenThere status from local storage
-const getBeenThereStatus = (placeName) => {
-    const status = localStorage.getItem(`beenThere_${placeName}`);
-    return status === 'true'; // Returns boolean
-};
-
-// Helper function to set beenThere status in local storage
-const setBeenThereStatus = (placeName, status) => {
-    localStorage.setItem(`beenThere_${placeName}`, status);
-};
-
-// Initialize destinations with beenThere status
-const initializeDestinations = () => {
-    const newDestinations = {};
-    for (const neighborhood in destinationsByNeighborhood) {
-        newDestinations[neighborhood] = destinationsByNeighborhood[neighborhood].map(dest => ({
-            ...dest,
-            beenThere: getBeenThereStatus(dest.name)
-        }));
-    }
-    return newDestinations;
-};
-
-let initializedDestinations; // Declare a variable to hold the initialized data
 
 const destinationsByNeighborhood = {
     "종로구": [
@@ -74,7 +51,32 @@ const destinationsByNeighborhood = {
     ]
 };
 
-// --- Challenge Logic ---
+let initializedDestinations;
+let tripCourse = [];
+
+// =================================================================================
+// Helper Functions
+// =================================================================================
+const getBeenThereStatus = (placeName) => localStorage.getItem(`beenThere_${placeName}`) === 'true';
+const setBeenThereStatus = (placeName, status) => localStorage.setItem(`beenThere_${placeName}`, status);
+
+const getTripCourse = () => JSON.parse(localStorage.getItem('tripCourse') || '[]');
+const saveTripCourse = (course) => localStorage.setItem('tripCourse', JSON.stringify(course));
+
+const initializeDestinations = () => {
+    const newDestinations = {};
+    for (const neighborhood in destinationsByNeighborhood) {
+        newDestinations[neighborhood] = destinationsByNeighborhood[neighborhood].map(dest => ({
+            ...dest,
+            beenThere: getBeenThereStatus(dest.name)
+        }));
+    }
+    return newDestinations;
+};
+
+// =================================================================================
+// Challenge Logic
+// =================================================================================
 const calculateProgress = () => {
     const progress = {};
     let totalVisited = 0;
@@ -84,21 +86,11 @@ const calculateProgress = () => {
         const places = initializedDestinations[neighborhood];
         const visitedCount = places.filter(dest => dest.beenThere).length;
         const totalCount = places.length;
-        progress[neighborhood] = {
-            visited: visitedCount,
-            total: totalCount,
-            percentage: totalCount > 0 ? (visitedCount / totalCount) * 100 : 0
-        };
+        progress[neighborhood] = { visited: visitedCount, total: totalCount, percentage: totalCount > 0 ? (visitedCount / totalCount) * 100 : 0 };
         totalVisited += visitedCount;
         totalPlaces += totalCount;
     }
-
-    progress.total = {
-        visited: totalVisited,
-        total: totalPlaces,
-        percentage: totalPlaces > 0 ? (totalVisited / totalPlaces) * 100 : 0
-    };
-
+    progress.total = { visited: totalVisited, total: totalPlaces, percentage: totalPlaces > 0 ? (totalVisited / totalPlaces) * 100 : 0 };
     return progress;
 };
 
@@ -107,7 +99,6 @@ const getBadges = (progress) => {
     if (progress.total.visited >= 1) badges.push("서울 첫걸음");
     if (progress.total.visited >= 10) badges.push("서울 탐험가");
     if (progress.total.percentage === 100) badges.push("서울 정복자");
-
     for (const neighborhood in progress) {
         if (neighborhood !== 'total' && progress[neighborhood].percentage === 100) {
             badges.push(`${neighborhood} 마스터`);
@@ -116,92 +107,48 @@ const getBadges = (progress) => {
     return badges;
 };
 
-
+// =================================================================================
+// Main Application Logic
+// =================================================================================
 document.addEventListener('DOMContentLoaded', () => {
     initializedDestinations = initializeDestinations();
+    tripCourse = getTripCourse();
 
     // --- DOM Elements ---
     const neighborhoodFiltersContainer = document.getElementById('neighborhood-filters');
     const destinationsGrid = document.getElementById('destinations-grid');
     const searchInput = document.getElementById('search-input');
     const mapModal = document.getElementById('map-modal');
-    const mapModalCloseBtn = mapModal.querySelector('.modal-close');
-    const modalDetailsContainer = document.getElementById('modal-details-container');
-    const challengeBtn = document.getElementById('challenge-btn');
     const challengeModal = document.getElementById('challenge-modal');
-    const challengeModalCloseBtn = challengeModal.querySelector('.modal-close');
-    const challengeContent = document.getElementById('challenge-content');
+    const tripCourseModal = document.getElementById('trip-course-modal');
 
     let activeNeighborhood = '종로구';
-    let currentSearchTerm = '';
 
-    // --- Modal Logic ---
+    // --- Modal Control ---
     const openModal = (modalElement) => modalElement.classList.remove('hidden');
     const closeModal = (modalElement) => modalElement.classList.add('hidden');
 
-    const openMapModal = (placeName) => {
-        let destination;
-        for (const neighborhood in initializedDestinations) {
-            const found = initializedDestinations[neighborhood].find(d => d.name === placeName);
-            if (found) { destination = found; break; }
+    const setupModalCloseEvents = (modalElement) => {
+        modalElement.querySelector('.modal-close').addEventListener('click', () => closeModal(modalElement));
+        modalElement.addEventListener('click', e => { if (e.target === modalElement) closeModal(modalElement); });
+    };
+    
+    setupModalCloseEvents(mapModal);
+    setupModalCloseEvents(challengeModal);
+    setupModalCloseEvents(tripCourseModal);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            [mapModal, challengeModal, tripCourseModal].forEach(m => {
+                if (!m.classList.contains('hidden')) closeModal(m);
+            });
         }
-        if (!destination) return;
-        
-        const mapContainer = document.getElementById('map-container');
-        mapContainer.innerHTML = '';
-        modalDetailsContainer.innerHTML = '';
-        
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(placeName)}&output=embed`;
-        iframe.allowFullscreen = true;
-        iframe.loading = 'lazy';
-        mapContainer.appendChild(iframe);
-        
-        modalDetailsContainer.innerHTML = `
-            <h2>${destination.name}</h2>
-            <p>${destination.desc}</p>
-            <p><strong>운영시간:</strong> ${destination.hours || '정보 없음'}</p>
-            ${destination.website ? `<p><a href="${destination.website}" target="_blank" rel="noopener noreferrer">공식 웹사이트 방문</a></p>` : ''}
-        `;
-        openModal(mapModal);
-    };
+    });
 
-    const openChallengeModal = () => {
-        const progress = calculateProgress();
-        const badges = getBadges(progress);
-        
-        let contentHTML = `
-            <div class="challenge-group">
-                <h3>총 진행률 (${progress.total.visited}/${progress.total.total})</h3>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: ${progress.total.percentage}%;">${Math.round(progress.total.percentage)}%</div>
-                </div>
-            </div>
-            <div class="challenge-group">
-                <h3>획득한 뱃지</h3>
-                <div class="badge-container">
-                    ${badges.length > 0 ? badges.map(b => `<span class="badge">${b}</span>`).join('') : '<span class="badge locked">아직 뱃지 없음</span>'}
-                </div>
-            </div>
-            <div class="challenge-group">
-                <h3>동네별 진행률</h3>
-                ${Object.keys(neighborhoods).map(n => `
-                    <p>${n} (${progress[n].visited}/${progress[n].total})</p>
-                    <div class="progress-bar-container">
-                         <div class="progress-bar" style="width: ${progress[n].percentage}%;"></div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-        challengeContent.innerHTML = contentHTML;
-        openModal(challengeModal);
-    };
-
-    // --- Render Logic ---
+    // --- Render Functions ---
     const renderDestinations = (neighborhood, searchTerm = '') => {
         destinationsGrid.innerHTML = '';
         let filteredDests = initializedDestinations[neighborhood] || [];
-
         if (searchTerm) {
             filteredDests = filteredDests.filter(d => d.name.toLowerCase().includes(searchTerm.toLowerCase()));
         }
@@ -220,11 +167,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3 class="card-title">${dest.name}</h3>
                     <p class="card-desc">${dest.desc}</p>
                 </div>
-                <div class="been-there-wrapper">
-                    <label class="been-there-label">
-                        <input type="checkbox" class="been-there-checkbox" ${dest.beenThere ? 'checked' : ''} data-name="${dest.name}">
-                        <span>가봤어요</span>
-                    </label>
+                <div class="card-actions">
+                    <div class="been-there-wrapper">
+                        <label class="been-there-label">
+                            <input type="checkbox" class="been-there-checkbox" ${dest.beenThere ? 'checked' : ''} data-name="${dest.name}">
+                            <span>가봤어요</span>
+                        </label>
+                    </div>
+                    <button class="add-to-course-btn" data-name="${dest.name}">+ 코스에 추가</button>
                 </div>
             `;
             destinationsGrid.appendChild(card);
@@ -249,22 +199,84 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    const renderTripCourse = () => {
+        const listElement = document.getElementById('trip-course-list');
+        listElement.innerHTML = '';
+        if (tripCourse.length === 0) {
+            listElement.innerHTML = '<p class="no-results">코스에 추가된 장소가 없습니다.</p>';
+            return;
+        }
+        tripCourse.forEach((placeName, index) => {
+            const item = document.createElement('li');
+            item.className = 'trip-course-item';
+            item.innerHTML = `<span>${index + 1}. ${placeName}</span><button class="remove-from-course-btn" data-name="${placeName}">&times;</button>`;
+            listElement.appendChild(item);
+        });
+    };
+
+    // --- Modal Openers ---
+    const openMapModal = (placeName) => {
+        let destination;
+        for (const neighborhood in initializedDestinations) {
+            const found = initializedDestinations[neighborhood].find(d => d.name === placeName);
+            if (found) { destination = found; break; }
+        }
+        if (!destination) return;
+        
+        document.getElementById('map-container').innerHTML = `<iframe src="https://maps.google.com/maps?q=${encodeURIComponent(placeName)}&output=embed" allowfullscreen="" loading="lazy"></iframe>`;
+        document.getElementById('modal-details-container').innerHTML = `
+            <h2>${destination.name}</h2>
+            <p>${destination.desc}</p>
+            <p><strong>운영시간:</strong> ${destination.hours || '정보 없음'}</p>
+            ${destination.website ? `<p><a href="${destination.website}" target="_blank" rel="noopener noreferrer">공식 웹사이트 방문</a></p>` : ''}
+        `;
+        openModal(mapModal);
+    };
+
+    const openChallengeModal = () => {
+        const progress = calculateProgress();
+        const badges = getBadges(progress);
+        document.getElementById('challenge-content').innerHTML = `
+            <div class="challenge-group"><h3>총 진행률 (${progress.total.visited}/${progress.total.total})</h3><div class="progress-bar-container"><div class="progress-bar" style="width: ${progress.total.percentage}%;">${Math.round(progress.total.percentage)}%</div></div></div>
+            <div class="challenge-group"><h3>획득한 뱃지</h3><div class="badge-container">${badges.length > 0 ? badges.map(b => `<span class="badge">${b}</span>`).join('') : '<span class="badge locked">아직 뱃지 없음</span>'}</div></div>
+            <div class="challenge-group"><h3>동네별 진행률</h3>${Object.keys(neighborhoods).map(n => `<p>${n} (${progress[n].visited}/${progress[n].total})</p><div class="progress-bar-container"><div class="progress-bar" style="width: ${progress[n].percentage}%;"></div></div>`).join('')}</div>
+        `;
+        openModal(challengeModal);
+    };
+
+    const openTripCourseModal = () => {
+        renderTripCourse();
+        openModal(tripCourseModal);
+    };
+
     // --- Event Listeners ---
     searchInput.addEventListener('input', e => renderDestinations(activeNeighborhood, e.target.value));
 
     destinationsGrid.addEventListener('click', (e) => {
         const checkbox = e.target.closest('.been-there-checkbox');
         if (checkbox) {
+            e.stopPropagation();
             const placeName = checkbox.dataset.name;
             const isChecked = checkbox.checked;
             setBeenThereStatus(placeName, isChecked);
-            
-            const card = checkbox.closest('.destination-card');
-            card.classList.toggle('been-there', isChecked);
-
+            checkbox.closest('.destination-card').classList.toggle('been-there', isChecked);
             for (const neighborhood in initializedDestinations) {
                 const dest = initializedDestinations[neighborhood].find(d => d.name === placeName);
                 if (dest) { dest.beenThere = isChecked; break; }
+            }
+            return;
+        }
+
+        const addToCourseBtn = e.target.closest('.add-to-course-btn');
+        if (addToCourseBtn) {
+            e.stopPropagation();
+            const placeName = addToCourseBtn.dataset.name;
+            if (!tripCourse.includes(placeName)) {
+                tripCourse.push(placeName);
+                saveTripCourse(tripCourse);
+                alert(`${placeName}이(가) 코스에 추가되었습니다.`);
+            } else {
+                alert('이미 코스에 추가된 장소입니다.');
             }
             return;
         }
@@ -273,18 +285,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (card) openMapModal(card.dataset.name);
     });
 
-    mapModalCloseBtn.addEventListener('click', () => closeModal(mapModal));
-    mapModal.addEventListener('click', e => { if (e.target === mapModal) closeModal(mapModal); });
-    
-    challengeBtn.addEventListener('click', openChallengeModal);
-    challengeModalCloseBtn.addEventListener('click', () => closeModal(challengeModal));
-    challengeModal.addEventListener('click', e => { if (e.target === challengeModal) closeModal(challengeModal); });
+    document.getElementById('challenge-btn').addEventListener('click', openChallengeModal);
+    document.getElementById('trip-course-btn').addEventListener('click', openTripCourseModal);
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !mapModal.classList.contains('hidden')) closeModal(mapModal);
-        if (e.key === 'Escape' && !challengeModal.classList.contains('hidden')) closeModal(challengeModal);
+    document.getElementById('trip-course-list').addEventListener('click', (e) => {
+        const removeBtn = e.target.closest('.remove-from-course-btn');
+        if (removeBtn) {
+            const placeName = removeBtn.dataset.name;
+            tripCourse = tripCourse.filter(p => p !== placeName);
+            saveTripCourse(tripCourse);
+            renderTripCourse();
+        }
     });
 
+    document.getElementById('clear-course-btn').addEventListener('click', () => {
+        if (confirm('정말 코스를 모두 비우시겠습니까?')) {
+            tripCourse = [];
+            saveTripCourse(tripCourse);
+            renderTripCourse();
+        }
+    });
+
+    // --- Initial Render ---
     renderNeighborhoodButtons();
     renderDestinations(activeNeighborhood);
 });
