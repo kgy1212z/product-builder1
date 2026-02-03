@@ -184,3 +184,32 @@ footer {
     display: none;
 }
 
+
+.search-container {
+    margin-bottom: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#search-input {
+    width: 80%;
+    max-width: 400px;
+    padding: 12px 20px;
+    border: 2px solid var(--light-gray);
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-family: Jua, sans-serif;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#search-input::placeholder {
+    color: #a7a2b0;
+}
+
+#search-input:focus {
+    border-color: var(--main-color);
+    box-shadow: 0 0 8px rgba(91, 33, 182, 0.2);
+}
+
