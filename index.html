@@ -8,53 +8,19 @@
 </head>
 <body>
     <div class="container">
-        <!-- 지역 선택 화면 -->
-        <section id="region-selection-screen">
-            <h1 class="title">어디로 떠나볼까요?</h1>
-            <p class="subtitle">먼저 여행하고 싶은 지역을 선택해주세요.</p>
-            <div class="region-buttons">
-                <button class="region-btn" data-region="서울특별시">서울특별시</button>
-                <button class="region-btn" data-region="경기도">경기도</button>
-                <button class="region-btn" data-region="강원도">강원도</button>
-                <button class="region-btn" data-region="충청북도">충청북도</button>
-                <button class="region-btn" data-region="충청남도">충청남도</button>
-                <button class="region-btn" data-region="전라북도">전라북도</button>
-                <button class="region-btn" data-region="전라남도">전라남도</button>
-                <button class="region-btn" data-region="경상북도">경상북도</button>
-                <button class="region-btn" data-region="경상남도">경상남도</button>
-                <button class="region-btn" data-region="제주도">제주도</button>
-            </div>
-        </section>
+        <header class="header">
+            <h1 class="title">서울, 어디까지 가봤니?</h1>
+            <p class="subtitle">테마별로 정리한 서울의 보물같은 장소들</p>
+        </header>
 
-        <!-- 여행 기간 선택 화면 -->
-        <section id="duration-selection-screen" class="hidden">
-            <h1 class="title">얼마나 머무실 건가요?</h1>
-            <p class="subtitle">여행 기간을 선택해주세요.</p>
-            <div class="duration-buttons">
-                <button class="duration-btn" data-duration="day-trip">당일치기</button>
-                <button class="duration-btn" data-duration="1n2d">1박 2일</button>
-                <button class="duration-btn" data-duration="2n-plus">2박 이상</button>
+        <main>
+            <div id="theme-filters" class="theme-filters">
+                <!-- Theme buttons will be dynamically inserted here by app.js -->
             </div>
-        </section>
-
-        <!-- 질문 화면 -->
-        <section id="qna-screen" class="hidden">
-            <div class="status-bar">
-                <div class="status-bar-inner"></div>
+            <div id="destinations-grid" class="destinations-grid">
+                <!-- Destination cards will be dynamically inserted here by app.js -->
             </div>
-            <h2 id="question-title" class="question-title"></h2>
-            <div id="choices" class="choices">
-                <!-- 선택지는 JavaScript로 동적으로 추가됩니다. -->
-            </div>
-        </section>
-
-        <!-- 결과 화면 -->
-        <section id="result-screen" class="hidden">
-            <h2 class="result-subtitle">당신에게 어울리는 여행지는...</h2>
-            <h1 id="result-name" class="result-name"></h1>
-            <p id="result-desc" class="result-desc"></p>
-            <button id="retry-btn" class="btn">다시 테스트하기</button>
-        </section>
+        </main>
 
         <footer>
             <p>&copy; 2026 Ddalkkak. All Rights Reserved.</p>
