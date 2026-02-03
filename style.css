@@ -205,3 +205,53 @@ footer {
     box-shadow: 0 0 8px rgba(91, 33, 182, 0.2);
 }
 
+
+/* Been There Checkbox Styles */
+.been-there-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.been-there-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+.been-there-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--main-color);
+    border-radius: 5px;
+    margin-right: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.been-there-checkbox:checked {
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+}
+
+.been-there-checkbox:checked::after {
+    content: "✔";
+    color: var(--white);
+    font-size: 1.2rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1;
+}
+
+.destination-card.been-there {
+    border-color: var(--main-color);
+    box-shadow: 0 4px 15px rgba(91, 33, 182, 0.2);
+    background-color: #f0f0ff; /* Lighter background for checked items */
+}
+

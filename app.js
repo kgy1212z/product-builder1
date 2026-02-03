@@ -9,6 +9,31 @@ const neighborhoods = {
     "송파구": "송파구",
 };
 
+// Helper function to get beenThere status from local storage
+const getBeenThereStatus = (placeName) => {
+    const status = localStorage.getItem(`beenThere_${placeName}`);
+    return status === 'true'; // Returns boolean
+};
+
+// Helper function to set beenThere status in local storage
+const setBeenThereStatus = (placeName, status) => {
+    localStorage.setItem(`beenThere_${placeName}`, status);
+};
+
+// Initialize destinations with beenThere status
+const initializeDestinations = () => {
+    const newDestinations = {};
+    for (const neighborhood in destinationsByNeighborhood) {
+        newDestinations[neighborhood] = destinationsByNeighborhood[neighborhood].map(dest => ({
+            ...dest,
+            beenThere: getBeenThereStatus(dest.name)
+        }));
+    }
+    return newDestinations;
+};
+
+let initializedDestinations; // Declare a variable to hold the initialized data
+
 const destinationsByNeighborhood = {
     "종로구": [
         {
@@ -119,6 +144,8 @@ const destinationsByNeighborhood = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    initializedDestinations = initializeDestinations(); // Initialize data here
+
     const neighborhoodFiltersContainer = document.getElementById('neighborhood-filters');
     const destinationsGrid = document.getElementById('destinations-grid');
     const searchInput = document.getElementById('search-input');
@@ -146,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderDestinations = (neighborhood, searchTerm = '') => {
         destinationsGrid.innerHTML = '';
-        let filteredDestinations = destinationsByNeighborhood[neighborhood] || [];
+        let filteredDestinations = initializedDestinations[neighborhood] || []; // Use initialized data
 
         if (searchTerm) {
             const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -163,12 +190,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         filteredDestinations.forEach(dest => {
             const card = document.createElement('div');
-            card.className = 'destination-card';
+            card.className = `destination-card ${dest.beenThere ? 'been-there' : ''}`;
             card.dataset.name = dest.name;
             card.innerHTML = `
                 <div class="card-body">
                     <h3 class="card-title">${dest.name}</h3>
                     <p class="card-desc">${dest.desc}</p>
+                    <div class="been-there-wrapper">
+                        <label class="been-there-label">
+                            <input type="checkbox" class="been-there-checkbox" ${dest.beenThere ? 'checked' : ''} data-name="${dest.name}">
+                            <span>가봤어요</span>
+                        </label>
+                    </div>
                 </div>
             `;
             destinationsGrid.appendChild(card);
@@ -203,7 +236,25 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDestinations(activeNeighborhood, currentSearchTerm);
     });
 
+    // Open modal when a destination card is clicked
     destinationsGrid.addEventListener('click', (e) => {
+        const checkbox = e.target.closest('.been-there-checkbox');
+        if (checkbox) {
+            const placeName = checkbox.dataset.name;
+            const isChecked = checkbox.checked;
+            setBeenThereStatus(placeName, isChecked);
+
+            // Update the initializedDestinations data structure
+            for (const neighborhood in initializedDestinations) {
+                const destIndex = initializedDestinations[neighborhood].findIndex(dest => dest.name === placeName);
+                if (destIndex !== -1) {
+                    initializedDestinations[neighborhood][destIndex].beenThere = isChecked;
+                    break;
+                }
+            }
+            return; // Prevent modal from opening if checkbox is clicked
+        }
+
         const card = e.target.closest('.destination-card');
         if (card && card.dataset.name) {
             openModal(card.dataset.name);
