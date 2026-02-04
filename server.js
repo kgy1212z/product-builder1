@@ -7,7 +7,12 @@ const app = express();
 const PORT = 3000;
 
 // --- Middleware ---
-app.use(cors()); // Enable Cross-Origin Resource Sharing
+const corsOptions = {
+    origin: 'https://5000-firebase-ddalkkak-1-1769566528988.cluster-bg6uurscprhn6qxr6xwtrhvkf6.cloudworkstations.dev',
+    optionsSuccessStatus: 200 // For legacy browser support
+};
+
+app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing with specific options
 app.use(express.json()); // Middleware to parse JSON bodies
 
 // --- API Endpoint ---
