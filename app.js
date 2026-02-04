@@ -88,6 +88,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let activeNeighborhood = Object.keys(destinationsByNeighborhood)[0]; // 첫 번째 동네를 기본값으로 설정
 
+    // --- Toast Notification ---
+    const showToast = (message) => {
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) {
+            existingToast.remove();
+        }
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.parentElement.removeChild(toast);
+                }
+            }, 500);
+        }, 2500);
+    };
+
     // --- Modal Control ---
     const openModal = (modalElement) => modalElement.classList.remove('hidden');
     const closeModal = (modalElement) => modalElement.classList.add('hidden');
@@ -245,9 +268,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!tripCourse.includes(placeName)) {
                 tripCourse.push(placeName);
                 saveTripCourse(tripCourse);
-                alert(`${placeName}이(가) 코스에 추가되었습니다.`);
+                showToast(`${placeName}이(가) 코스에 추가되었습니다.`);
             } else {
-                alert('이미 코스에 추가된 장소입니다.');
+                showToast('이미 코스에 추가된 장소입니다.');
             }
             return;
         }
