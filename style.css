@@ -1,12 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 
-:root {
+:root, body[data-theme="light"] {
     --main-color: #5b21b6;
     --bg-color: #f3e8ff;
     --text-color: #1e1b4b;
     --light-gray: #d9d3e8;
     --white: #ffffff;
     --card-bg: #faf7ff;
+    --subtitle-color: #4c1d95;
+    --been-there-bg: #f0f0ff;
+    --badge-locked-bg: #f3f4f6;
+    --badge-locked-color: #9ca3af;
+    --theme-btn-hover-bg: #ede9fe;
+}
+
+body[data-theme="dark"] {
+    --main-color: #8b5cf6;
+    --bg-color: #1f2937;
+    --text-color: #e5e7eb;
+    --light-gray: #4b5563;
+    --white: #111827;
+    --card-bg: #374151;
+    --subtitle-color: #a78bfa;
+    --been-there-bg: #312e75;
+    --badge-locked-bg: #4b5563;
+    --badge-locked-color: #9ca3af;
+    --theme-btn-hover-bg: #374151;
 }
 
 body {
@@ -19,6 +38,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
@@ -44,7 +64,7 @@ body {
 
 .subtitle {
     font-size: 1.3rem;
-    color: #4c1d95;
+    color: var(--subtitle-color);
     margin: 0;
 }
 
@@ -69,7 +89,7 @@ body {
 }
 
 .theme-btn:hover {
-    background-color: #ede9fe;
+    background-color: var(--theme-btn-hover-bg);
     border-color: var(--main-color);
 }
 
@@ -300,7 +320,7 @@ footer {
 .destination-card.been-there {
     border-color: var(--main-color);
     box-shadow: 0 4px 15px rgba(91, 33, 182, 0.2);
-    background-color: #f0f0ff; /* Lighter background for checked items */
+    background-color: var(--been-there-bg); /* Lighter background for checked items */
 }
 
 
@@ -377,8 +397,8 @@ footer {
     font-size: 0.9rem;
 }
 .badge.locked {
-    background-color: #f3f4f6;
-    color: #9ca3af;
+    background-color: var(--badge-locked-bg);
+    color: var(--badge-locked-color);
 }
 
 
@@ -499,5 +519,60 @@ footer {
 .trip-course-item.dragging {
     opacity: 0.5;
     background-color: #ede9fe;
+}
+
+
+/* Theme Switch Styles */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    /* Adjust margin to align with other header buttons */
+    margin-top: 15px; 
+}
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin-left: 10px;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: ;
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--main-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
 }
 

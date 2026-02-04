@@ -90,6 +90,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     let activeNeighborhood = Object.keys(destinationsByNeighborhood)[0]; // 첫 번째 동네를 기본값으로 설정
     let draggedItemIndex = null;
 
+    // --- Theme Switcher Logic ---
+    const themeToggle = document.getElementById('theme-toggle');
+
+    const setTheme = (theme) => {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        themeToggle.checked = theme === 'dark';
+    };
+
+    themeToggle.addEventListener('change', (e) => {
+        setTheme(e.target.checked ? 'dark' : 'light');
+    });
+
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
     // --- Toast Notification ---
     const showToast = (message) => {
         const existingToast = document.querySelector('.toast-notification');
