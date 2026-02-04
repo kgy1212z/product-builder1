@@ -65,9 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const destinationsGrid = document.getElementById('destinations-grid');
 
     try {
-        const backendPort = 3000;
-        const backendUrl = `https://${backendPort}-${window.location.hostname}/api/destinations`;
-        const response = await fetch(backendUrl);
+        const response = await fetch('data.json');
         if (!response.ok) {
             throw new Error('네트워크 응답이 올바르지 않습니다.');
         }
