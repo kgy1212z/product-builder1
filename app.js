@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const destinationsGrid = document.getElementById('destinations-grid');
 
     try {
-        const response = await fetch('data.json');
+        const response = await fetch('http://localhost:3000/api/destinations');
         if (!response.ok) {
             throw new Error('네트워크 응답이 올바르지 않습니다.');
         }
