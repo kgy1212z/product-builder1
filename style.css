@@ -494,3 +494,10 @@ footer {
     transform: translate(-50%, -10px);
 }
 
+
+/* Drag and Drop styles */
+.trip-course-item.dragging {
+    opacity: 0.5;
+    background-color: #ede9fe;
+}
+

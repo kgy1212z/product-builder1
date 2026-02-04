@@ -85,8 +85,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapModal = document.getElementById('map-modal');
     const challengeModal = document.getElementById('challenge-modal');
     const tripCourseModal = document.getElementById('trip-course-modal');
+    const tripCourseList = document.getElementById('trip-course-list');
 
     let activeNeighborhood = Object.keys(destinationsByNeighborhood)[0]; // 첫 번째 동네를 기본값으로 설정
+    let draggedItemIndex = null;
 
     // --- Toast Notification ---
     const showToast = (message) => {
@@ -190,17 +192,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const renderTripCourse = () => {
-        const listElement = document.getElementById('trip-course-list');
-        listElement.innerHTML = '';
+        tripCourseList.innerHTML = '';
         if (tripCourse.length === 0) {
-            listElement.innerHTML = '<p class="no-results">코스에 추가된 장소가 없습니다.</p>';
+            tripCourseList.innerHTML = '<p class="no-results">코스에 추가된 장소가 없습니다.</p>';
             return;
         }
         tripCourse.forEach((placeName, index) => {
             const item = document.createElement('li');
             item.className = 'trip-course-item';
+            item.setAttribute('draggable', 'true');
+            item.dataset.index = index;
             item.innerHTML = `<span>${index + 1}. ${placeName}</span><button class="remove-from-course-btn" data-name="${placeName}">&times;</button>`;
-            listElement.appendChild(item);
+            tripCourseList.appendChild(item);
         });
     };
 
@@ -282,7 +285,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('challenge-btn').addEventListener('click', openChallengeModal);
     document.getElementById('trip-course-btn').addEventListener('click', openTripCourseModal);
 
-    document.getElementById('trip-course-list').addEventListener('click', (e) => {
+    // --- Trip Course Modal Event Listeners (Remove + Drag/Drop) ---
+    tripCourseList.addEventListener('click', (e) => {
         const removeBtn = e.target.closest('.remove-from-course-btn');
         if (removeBtn) {
             const placeName = removeBtn.dataset.name;
@@ -290,6 +294,38 @@ document.addEventListener('DOMContentLoaded', async () => {
             saveTripCourse(tripCourse);
             renderTripCourse();
         }
+    });
+
+    tripCourseList.addEventListener('dragstart', (e) => {
+        const draggedItem = e.target.closest('.trip-course-item');
+        if (!draggedItem) return;
+        draggedItemIndex = parseInt(draggedItem.dataset.index, 10);
+        e.dataTransfer.effectAllowed = 'move';
+        setTimeout(() => draggedItem.classList.add('dragging'), 0);
+    });
+
+    tripCourseList.addEventListener('dragover', (e) => {
+        e.preventDefault();
+    });
+
+    tripCourseList.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const dropTarget = e.target.closest('.trip-course-item');
+        if (dropTarget && draggedItemIndex !== null) {
+            const dropIndex = parseInt(dropTarget.dataset.index, 10);
+            const [draggedElement] = tripCourse.splice(draggedItemIndex, 1);
+            tripCourse.splice(dropIndex, 0, draggedElement);
+            saveTripCourse(tripCourse);
+            renderTripCourse();
+        }
+    });
+    
+    tripCourseList.addEventListener('dragend', (e) => {
+        const draggedItem = e.target.closest('.trip-course-item');
+        if(draggedItem) {
+            draggedItem.classList.remove('dragging');
+        }
+        draggedItemIndex = null;
     });
 
     document.getElementById('clear-course-btn').addEventListener('click', () => {
